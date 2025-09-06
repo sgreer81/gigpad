@@ -1,5 +1,49 @@
 [
   {
+    "id": "a-ambient-pad",
+    "key": "A",
+    "style": "ambient-pad",
+    "filePath": "/data/loops/audio/A-ambient-pad.mp3",
+    "duration": 8.0,
+    "metadata": {
+      "tempo": 80,
+      "description": "Warm ambient pad in A major"
+    }
+  },
+  {
+    "id": "ab-ambient-pad",
+    "key": "Ab",
+    "style": "ambient-pad",
+    "filePath": "/data/loops/audio/Ab-ambient-pad.mp3",
+    "duration": 8.0,
+    "metadata": {
+      "tempo": 80,
+      "description": "Warm ambient pad in A♭ major"
+    }
+  },
+  {
+    "id": "b-ambient-pad",
+    "key": "B",
+    "style": "ambient-pad",
+    "filePath": "/data/loops/audio/B-ambient-pad.mp3",
+    "duration": 8.0,
+    "metadata": {
+      "tempo": 80,
+      "description": "Warm ambient pad in B major"
+    }
+  },
+  {
+    "id": "bb-ambient-pad",
+    "key": "Bb",
+    "style": "ambient-pad",
+    "filePath": "/data/loops/audio/Bb-ambient-pad.mp3",
+    "duration": 8.0,
+    "metadata": {
+      "tempo": 80,
+      "description": "Warm ambient pad in B♭ major"
+    }
+  },
+  {
     "id": "c-ambient-pad",
     "key": "C",
     "style": "ambient-pad",
@@ -8,17 +52,6 @@
     "metadata": {
       "tempo": 80,
       "description": "Warm ambient pad in C major"
-    }
-  },
-  {
-    "id": "b-ambient-pad",
-    "key": "B",
-    "style": "ambient-pad",
-    "filePath": "/data/loops/audio/B-ambient-pad.mp3",
-    "duration": 10,
-    "metadata": {
-      "tempo": 80,
-      "description": "Warm ambient pad in B major"
     }
   },
   {
@@ -44,14 +77,14 @@
     }
   },
   {
-    "id": "em-ambient-pad",
-    "key": "Em",
+    "id": "f-ambient-pad",
+    "key": "F",
     "style": "ambient-pad",
-    "filePath": "/data/loops/audio/Em-ambient-pad.mp3",
+    "filePath": "/data/loops/audio/F-ambient-pad.mp3",
     "duration": 8.0,
     "metadata": {
       "tempo": 80,
-      "description": "Warm ambient pad in E minor"
+      "description": "Warm ambient pad in F major"
     }
   },
   {
@@ -66,25 +99,14 @@
     }
   },
   {
-    "id": "a-ambient-pad",
-    "key": "A",
+    "id": "gb-ambient-pad",
+    "key": "Gb",
     "style": "ambient-pad",
-    "filePath": "/data/loops/audio/A-ambient-pad.mp3",
+    "filePath": "/data/loops/audio/Gb-ambient-pad.mp3",
     "duration": 8.0,
     "metadata": {
       "tempo": 80,
-      "description": "Warm ambient pad in A major"
-    }
-  },
-  {
-    "id": "bm-ambient-pad",
-    "key": "Bm",
-    "style": "ambient-pad",
-    "filePath": "/data/loops/audio/Bm-ambient-pad.mp3",
-    "duration": 8.0,
-    "metadata": {
-      "tempo": 80,
-      "description": "Warm ambient pad in B minor"
+      "description": "Warm ambient pad in G♭ major"
     }
   }
 ]

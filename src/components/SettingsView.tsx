@@ -1,6 +1,7 @@
 import React from 'react';
-import { Moon, Sun, Palette, Info, Github } from 'lucide-react';
+import { Moon, Sun, Palette, Info, Github, Music } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
+import { useSettings } from '../contexts/SettingsContext';
 
 interface SettingsViewProps {
   className?: string;
@@ -8,6 +9,7 @@ interface SettingsViewProps {
 
 export const SettingsView: React.FC<SettingsViewProps> = ({ className = '' }) => {
   const { theme, toggleTheme } = useTheme();
+  const { settings, updateSettings } = useSettings();
 
   return (
     <div className={`settings-view p-4 ${className}`}>
@@ -69,6 +71,95 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ className = '' }) =>
                     />
                   </div>
                 </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Audio Section */}
+        <div className="settings-section">
+          <h2 className="text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
+            <Music size={20} />
+            Audio & Loops
+          </h2>
+          
+          <div className="settings-items space-y-4">
+            {/* Auto-start Loops Toggle */}
+            <div className="setting-item bg-card border border-border rounded-lg p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Music size={20} />
+                  <div>
+                    <h3 className="font-medium text-foreground">Auto-start Loops</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Automatically start ambient pads when beginning performance and changing songs
+                    </p>
+                  </div>
+                </div>
+                
+                <button
+                  onClick={() => updateSettings({ autoStartLoops: !settings.autoStartLoops })}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-background ${
+                    settings.autoStartLoops 
+                      ? 'bg-blue-600 focus:ring-blue-500' 
+                      : 'bg-gray-300 focus:ring-gray-400'
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full transition-all duration-200 shadow-sm bg-white ${
+                      settings.autoStartLoops 
+                        ? 'translate-x-6' 
+                        : 'translate-x-1'
+                    }`}
+                  />
+                </button>
+              </div>
+            </div>
+
+            {/* Fade Duration Settings */}
+            <div className="setting-item bg-card border border-border rounded-lg p-4">
+              <div className="space-y-4">
+                <div>
+                  <h3 className="font-medium text-foreground mb-2">Fade Out Duration</h3>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    How long loops take to fade out when paused (in seconds)
+                  </p>
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="range"
+                      min="500"
+                      max="5000"
+                      step="500"
+                      value={settings.loopFadeOutDuration}
+                      onChange={(e) => updateSettings({ loopFadeOutDuration: parseInt(e.target.value) })}
+                      className="flex-1"
+                    />
+                    <span className="text-sm text-foreground font-medium w-12">
+                      {(settings.loopFadeOutDuration / 1000).toFixed(1)}s
+                    </span>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="font-medium text-foreground mb-2">Crossfade Duration</h3>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    How long loops blend together when changing songs (in seconds)
+                  </p>
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="range"
+                      min="250"
+                      max="3000"
+                      step="250"
+                      value={settings.loopBlendDuration}
+                      onChange={(e) => updateSettings({ loopBlendDuration: parseInt(e.target.value) })}
+                      className="flex-1"
+                    />
+                    <span className="text-sm text-foreground font-medium w-12">
+                      {(settings.loopBlendDuration / 1000).toFixed(1)}s
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

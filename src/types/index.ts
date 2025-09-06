@@ -32,20 +32,36 @@ export interface ChordPosition {
 }
 
 export interface Setlist {
-  id: string;
+  id: string; // UUID v4
   name: string;
   description?: string;
   songs: SetlistSong[];
-  createdAt: Date;
-  updatedAt: Date;
+  metadata: {
+    createdAt: Date;
+    updatedAt: Date;
+    estimatedDuration?: number; // calculated from song tempos
+    tags?: string[];
+  };
 }
 
 export interface SetlistSong {
-  songId: string;
-  order: number;
-  customKey?: string; // Override song's original key
-  customCapo?: number; // Override song's capo position
-  notes?: string; // Performance notes
+  songId: string; // References song from library
+  order: number; // 0-based ordering
+  customKey?: string; // Override original song key
+  customCapo?: number; // Override original capo position
+  notes?: string; // Performance-specific notes
+  addedAt: Date; // When song was added to setlist
+}
+
+export interface SetlistMetadata {
+  id: string;
+  name: string;
+  description?: string;
+  songCount: number;
+  estimatedDuration?: number;
+  createdAt: Date;
+  updatedAt: Date;
+  tags?: string[];
 }
 
 export interface LoopTrack {
@@ -62,12 +78,66 @@ export interface LoopTrack {
 
 // UI State types
 export interface AppState {
-  currentView: 'setlists' | 'performance' | 'songs';
+  currentView: 'setlists' | 'performance' | 'songs' | 'settings';
   currentSetlist?: Setlist;
   currentSongIndex?: number;
   isPlaying: boolean;
   currentTrack?: LoopTrack;
   volume: number;
+}
+
+// Setlist Management types
+export interface SetlistStorage {
+  // CRUD Operations
+  createSetlist(setlist: Omit<Setlist, 'id' | 'metadata'>): Promise<Setlist>;
+  getSetlist(id: string): Promise<Setlist | null>;
+  getAllSetlists(): Promise<SetlistMetadata[]>;
+  updateSetlist(id: string, updates: Partial<Setlist>): Promise<Setlist>;
+  deleteSetlist(id: string): Promise<boolean>;
+  
+  // Utility Operations
+  duplicateSetlist(id: string, newName: string): Promise<Setlist>;
+  addSongToSetlist(setlistId: string, songId: string, position?: number): Promise<Setlist>;
+  removeSongFromSetlist(setlistId: string, songId: string): Promise<Setlist>;
+  reorderSetlistSongs(setlistId: string, fromIndex: number, toIndex: number): Promise<Setlist>;
+  
+  // Data Management
+  exportSetlists(): Promise<string>; // JSON export
+  importSetlists(data: string): Promise<Setlist[]>;
+  clearAllSetlists(): Promise<void>;
+}
+
+export interface SetlistContextType {
+  // State
+  setlists: SetlistMetadata[];
+  currentSetlist: Setlist | null;
+  isEditing: boolean;
+  songLibrary: Song[];
+  
+  // Actions
+  createSetlist: (name: string, description?: string) => Promise<void>;
+  editSetlist: (id: string) => Promise<void>;
+  saveSetlist: () => Promise<void>;
+  deleteSetlist: (id: string) => Promise<boolean>;
+  addSongToSetlist: (songId: string, position?: number) => void;
+  removeSongFromSetlist: (songId: string) => void;
+  reorderSongs: (fromIndex: number, toIndex: number) => void;
+  
+  // Utility
+  duplicateSetlist: (id: string, newName: string) => Promise<Setlist>;
+  loadSetlist: (id: string) => Promise<void>;
+  clearCurrentSetlist: () => void;
+  refreshSetlists: () => Promise<void>;
+}
+
+export interface SongMetadata {
+  id: string;
+  title: string;
+  artist: string;
+  originalKey: string;
+  tempo?: number;
+  capoPosition?: number;
+  tags?: string[];
 }
 
 // Chord transposition types

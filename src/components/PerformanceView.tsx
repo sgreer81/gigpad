@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { 
   ChevronLeft, 
   ChevronRight, 
@@ -13,6 +13,8 @@ import type { Song, Setlist, LoopTrack } from '../types';
 import { FullSongDisplay } from './ChordLyricDisplay';
 import { ChordTransposer } from '../utils/chordTransposer';
 import { dataLoader } from '../utils/dataLoader';
+import { enhancedAudioManager } from '../utils/enhancedAudioManager';
+import { useSettings } from '../contexts/SettingsContext';
 
 interface PerformanceViewProps {
   setlist: Setlist;
@@ -27,6 +29,7 @@ export const PerformanceView: React.FC<PerformanceViewProps> = ({
   onBack,
   className = ''
 }) => {
+  const { settings } = useSettings();
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [currentKey, setCurrentKey] = useState<string>('');
   const [capoPosition, setCapoPosition] = useState(0);
@@ -34,8 +37,9 @@ export const PerformanceView: React.FC<PerformanceViewProps> = ({
   const [volume, setVolume] = useState(0.7);
   const [availableLoops, setAvailableLoops] = useState<LoopTrack[]>([]);
   const [currentLoop, setCurrentLoop] = useState<LoopTrack | null>(null);
-  const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
   const [showTransposeControls, setShowTransposeControls] = useState(false);
+  const [hasAutoStarted, setHasAutoStarted] = useState(false);
+  const [userPaused, setUserPaused] = useState(false);
 
   const currentSong = songs[currentSongIndex];
   const setlistSong = setlist.songs.find(s => s.songId === currentSong?.id);
@@ -44,49 +48,120 @@ export const PerformanceView: React.FC<PerformanceViewProps> = ({
     if (currentSong) {
       // Set initial key (custom key from setlist or original key)
       const initialKey = setlistSong?.customKey || currentSong.originalKey;
-      setCurrentKey(initialKey);
       
       // Set initial capo position
       const initialCapo = setlistSong?.customCapo ?? currentSong.capoPosition ?? 0;
       setCapoPosition(initialCapo);
 
-      // Load available loops for this key
-      loadLoopsForKey(initialKey);
+      // Always update key when song changes - this will trigger the loop loading
+      console.log(`Song changed: ${currentSong.title}, setting key to: ${initialKey}`);
+      setCurrentKey(initialKey);
     }
   }, [currentSong, setlistSong]);
+
+  // Cleanup effect
+  useEffect(() => {
+    return () => {
+      // Clean up audio when component unmounts
+      enhancedAudioManager.stop();
+    };
+  }, []);
+
+  // Sync UI state with actual audio state
+  useEffect(() => {
+    const syncInterval = setInterval(() => {
+      const actuallyPlaying = enhancedAudioManager.hasPlayingTracks();
+      const managerPlaying = enhancedAudioManager.getIsPlaying();
+      
+      // Only sync if user hasn't explicitly paused and there's a mismatch
+      if (!userPaused && isPlaying !== actuallyPlaying) {
+        console.log(`State sync: UI says ${isPlaying}, actual: ${actuallyPlaying}, manager: ${managerPlaying}`);
+        setIsPlaying(actuallyPlaying);
+      }
+      
+      // If user paused and audio has actually stopped, clear the pause flag
+      if (userPaused && !actuallyPlaying) {
+        console.log('Fade-out complete, clearing user pause flag');
+        setUserPaused(false);
+      }
+    }, 500); // Check every 500ms for more responsive updates
+
+    return () => clearInterval(syncInterval);
+  }, [isPlaying, userPaused]);
+
+  const autoStartLoop = useCallback(async (loop: LoopTrack) => {
+    try {
+      const trackId = `${loop.key}-${loop.style}`;
+      
+      if (enhancedAudioManager.hasActiveTrack()) {
+        // Crossfade to new loop
+        await enhancedAudioManager.playWithCrossfade(
+          loop.filePath, 
+          trackId, 
+          settings.loopBlendDuration
+        );
+      } else {
+        // Start fresh
+        await enhancedAudioManager.play(loop.filePath, trackId);
+      }
+      
+      enhancedAudioManager.setMasterVolume(volume);
+      setIsPlaying(true);
+      setUserPaused(false); // Clear pause flag when auto-starting
+    } catch (error) {
+      console.error('Error auto-starting loop:', error);
+    }
+  }, [settings.loopBlendDuration, volume]);
+
+  const loadLoopsForKey = useCallback(async (key: string) => {
+    try {
+      console.log(`Loading loops for key: ${key}, currentSongIndex: ${currentSongIndex}, hasAutoStarted: ${hasAutoStarted}`);
+      const loops = await dataLoader.getLoopsByKey(key);
+      setAvailableLoops(loops);
+      
+      // Auto-select first available loop
+      if (loops.length > 0) {
+        const newLoop = loops[0];
+        const newTrackId = `${newLoop.key}-${newLoop.style}`;
+        
+        // Only update current loop if it's different
+        if (!currentLoop || currentLoop.id !== newLoop.id) {
+          setCurrentLoop(newLoop);
+          
+          // Auto-start if enabled - always start/crossfade to new loop
+          if (settings.autoStartLoops) {
+            console.log(`Auto-starting/crossfading to loop: ${newTrackId}`);
+            await autoStartLoop(newLoop);
+            setHasAutoStarted(true);
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error loading loops:', error);
+    }
+  }, [currentSongIndex, hasAutoStarted, currentLoop, settings.autoStartLoops, autoStartLoop]);
 
   useEffect(() => {
     // Update loops when key changes
     if (currentKey) {
       loadLoopsForKey(currentKey);
     }
-  }, [currentKey]);
+  }, [currentKey, loadLoopsForKey]);
 
-  const loadLoopsForKey = async (key: string) => {
-    try {
-      const loops = await dataLoader.getLoopsByKey(key);
-      setAvailableLoops(loops);
-      
-      // Auto-select first available loop
-      if (loops.length > 0 && !currentLoop) {
-        setCurrentLoop(loops[0]);
-      }
-    } catch (error) {
-      console.error('Error loading loops:', error);
-    }
-  };
 
   const goToNextSong = () => {
     if (currentSongIndex < songs.length - 1) {
+      console.log(`Going to next song: ${currentSongIndex} -> ${currentSongIndex + 1}`);
       setCurrentSongIndex(currentSongIndex + 1);
-      stopAudio();
+      // Don't stop audio immediately - let the key change effect handle crossfading
     }
   };
 
   const goToPreviousSong = () => {
     if (currentSongIndex > 0) {
+      console.log(`Going to previous song: ${currentSongIndex} -> ${currentSongIndex - 1}`);
       setCurrentSongIndex(currentSongIndex - 1);
-      stopAudio();
+      // Don't stop audio immediately - let the key change effect handle crossfading
     }
   };
 
@@ -94,48 +169,54 @@ export const PerformanceView: React.FC<PerformanceViewProps> = ({
     if (!currentLoop) return;
 
     if (isPlaying) {
-      stopAudio();
+      pauseAudio();
     } else {
       playAudio();
     }
   };
 
-  const playAudio = () => {
+  const playAudio = async () => {
     if (!currentLoop) return;
 
     try {
-      if (audio) {
-        audio.pause();
-      }
-
-      const newAudio = new Audio(currentLoop.filePath);
-      newAudio.loop = true;
-      newAudio.volume = volume;
+      const trackId = `${currentLoop.key}-${currentLoop.style}`;
       
-      newAudio.play().then(() => {
-        setIsPlaying(true);
-        setAudio(newAudio);
-      }).catch((error) => {
-        console.error('Error playing audio:', error);
-      });
+      // Clear user pause flag when explicitly playing
+      setUserPaused(false);
+      
+      if (enhancedAudioManager.hasActiveTrack()) {
+        enhancedAudioManager.resume();
+      } else {
+        await enhancedAudioManager.play(currentLoop.filePath, trackId);
+        enhancedAudioManager.setMasterVolume(volume);
+      }
+      
+      setIsPlaying(true);
     } catch (error) {
-      console.error('Error creating audio:', error);
+      console.error('Error playing audio:', error);
     }
   };
 
-  const stopAudio = () => {
-    if (audio) {
-      audio.pause();
-      audio.currentTime = 0;
-    }
+  const pauseAudio = () => {
+    console.log('Pause button clicked, isPlaying:', isPlaying, 'hasPlayingTracks:', enhancedAudioManager.hasPlayingTracks());
+    
+    // Set user pause flag to prevent state sync from overriding
+    setUserPaused(true);
     setIsPlaying(false);
+    
+    if (settings.autoStartLoops) {
+      // Use fade out instead of hard stop - fade out ALL tracks
+      enhancedAudioManager.fadeOutAll(settings.loopFadeOutDuration);
+    } else {
+      // Always pause immediately for non-auto-start mode
+      enhancedAudioManager.pause();
+    }
   };
+
 
   const handleVolumeChange = (newVolume: number) => {
     setVolume(newVolume);
-    if (audio) {
-      audio.volume = newVolume;
-    }
+    enhancedAudioManager.setMasterVolume(newVolume);
   };
 
   const transposeUp = () => {

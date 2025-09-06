@@ -1,34 +1,34 @@
 [
   {
-    "id": "wonderwall",
-    "title": "Wonderwall",
-    "artist": "Oasis",
-    "originalKey": "Em",
-    "tempo": 87,
-    "capoPosition": 2
-  },
-  {
-    "id": "blackbird",
-    "title": "Blackbird",
-    "artist": "The Beatles",
-    "originalKey": "G",
-    "tempo": 96,
-    "capoPosition": 0
-  },
-  {
-    "id": "hotel-california",
-    "title": "Hotel California",
-    "artist": "Eagles",
-    "originalKey": "Bm",
-    "tempo": 74,
-    "capoPosition": 0
-  },
-  {
     "id": "his-glory-and-my-good",
     "title": "His Glory and My Good",
     "artist": "Cityalight",
     "originalKey": "E",
     "tempo": 68,
+    "capoPosition": 0
+  },
+  {
+    "id": "saved-my-soul",
+    "title": "Saved My Soul",
+    "artist": "Cityalight",
+    "originalKey": "Bb",
+    "tempo": 95,
+    "capoPosition": 1
+  },
+  {
+    "id": "because-of-christ",
+    "title": "Because of Christ",
+    "artist": "The Belonging Co",
+    "originalKey": "Bb",
+    "tempo": 70,
+    "capoPosition": 0
+  },
+  {
+    "id": "it-is-finished",
+    "title": "It Is Finished",
+    "artist": "Sovereign Grace Music",
+    "originalKey": "D",
+    "tempo": 60,
     "capoPosition": 0
   }
 ]
