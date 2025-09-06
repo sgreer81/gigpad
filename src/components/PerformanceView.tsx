@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { 
   ChevronLeft, 
   ChevronRight, 
@@ -13,9 +13,9 @@ import type { Song, Setlist, LoopTrack } from '../types';
 import { FullSongDisplay } from './ChordLyricDisplay';
 import { ChordTransposer } from '../utils/chordTransposer';
 import { dataLoader } from '../utils/dataLoader';
-import { enhancedAudioManager } from '../utils/enhancedAudioManager';
 import { SongOverrideStorage } from '../utils/songOverrides';
 import { useSettings } from '../contexts/SettingsContext';
+import { useLoopPlayer } from '../utils/useLoopPlayer';
 
 interface PerformanceViewProps {
   setlist: Setlist;
@@ -40,7 +40,6 @@ export const PerformanceView: React.FC<PerformanceViewProps> = ({
   const [currentLoop, setCurrentLoop] = useState<LoopTrack | null>(null);
   const [showTransposeControls, setShowTransposeControls] = useState(false);
   const [hasAutoStarted, setHasAutoStarted] = useState(false);
-  const [userPaused, setUserPaused] = useState(false);
 
   const currentSong = songs[currentSongIndex];
   const setlistSong = setlist.songs.find(s => s.songId === currentSong?.id);
@@ -67,100 +66,67 @@ export const PerformanceView: React.FC<PerformanceViewProps> = ({
     }
   }, [currentSong, setlistSong]);
 
-  // Cleanup effect
-  useEffect(() => {
-    return () => {
-      // Clean up audio when component unmounts
-      enhancedAudioManager.stop();
-    };
-  }, []);
-
-  // Sync UI state with actual audio state
-  useEffect(() => {
-    const syncInterval = setInterval(() => {
-      const actuallyPlaying = enhancedAudioManager.hasPlayingTracks();
-      const managerPlaying = enhancedAudioManager.getIsPlaying();
-      
-      // Only sync if user hasn't explicitly paused and there's a mismatch
-      if (!userPaused && isPlaying !== actuallyPlaying) {
-        console.log(`State sync: UI says ${isPlaying}, actual: ${actuallyPlaying}, manager: ${managerPlaying}`);
-        setIsPlaying(actuallyPlaying);
-      }
-      
-      // If user paused and audio has actually stopped, clear the pause flag
-      if (userPaused && !actuallyPlaying) {
-        console.log('Fade-out complete, clearing user pause flag');
-        setUserPaused(false);
-      }
-    }, 500); // Check every 500ms for more responsive updates
-
-    return () => clearInterval(syncInterval);
-  }, [isPlaying, userPaused]);
+  const loopOptions = useMemo(() => ({
+    crossfadeMs: settings.loopBlendDuration,
+    fadeOutMs: settings.loopFadeOutDuration,
+    initialVolume: volume,
+  }), [settings.loopBlendDuration, settings.loopFadeOutDuration, volume]);
+  const loopPlayer = useLoopPlayer(loopOptions);
+  const loopCurrentId = loopPlayer.currentId;
 
   const autoStartLoop = useCallback(async (loop: LoopTrack) => {
     try {
-      const trackId = `${loop.key}-${loop.style}`;
-      
-      if (enhancedAudioManager.hasActiveTrack()) {
-        // Crossfade to new loop
-        await enhancedAudioManager.playWithCrossfade(
-          loop.filePath, 
-          trackId, 
-          settings.loopBlendDuration
-        );
-      } else {
-        // Start fresh
-        await enhancedAudioManager.play(loop.filePath, trackId);
-      }
-      
-      enhancedAudioManager.setMasterVolume(volume);
+      const id = `${loop.key}-${loop.style}`;
+      await loopPlayer.playLoop({ id, url: loop.filePath });
       setIsPlaying(true);
-      setUserPaused(false); // Clear pause flag when auto-starting
     } catch (error) {
       console.error('Error auto-starting loop:', error);
     }
-  }, [settings.loopBlendDuration, volume]);
-
-  const loadLoopsForKey = useCallback(async (key: string) => {
-    try {
-      console.log(`Loading loops for key: ${key}, currentSongIndex: ${currentSongIndex}, hasAutoStarted: ${hasAutoStarted}`);
-      const loops = await dataLoader.getLoopsByKey(key);
-      setAvailableLoops(loops);
-      
-      // Auto-select first available loop
-      if (loops.length > 0) {
-        const newLoop = loops[0];
-        const newTrackId = `${newLoop.key}-${newLoop.style}`;
-        
-        // Only update current loop if it's different
-        if (!currentLoop || currentLoop.id !== newLoop.id) {
-          setCurrentLoop(newLoop);
-          
-          // Auto-start if enabled - always start/crossfade to new loop
-          if (settings.autoStartLoops) {
-            console.log(`Auto-starting/crossfading to loop: ${newTrackId}`);
-            await autoStartLoop(newLoop);
-            setHasAutoStarted(true);
-          }
-        }
-      }
-    } catch (error) {
-      console.error('Error loading loops:', error);
-    }
-  }, [currentSongIndex, hasAutoStarted, currentLoop, settings.autoStartLoops, autoStartLoop]);
-
-  // Calculate the effective key considering both transposition and capo
-  const getEffectiveKey = useCallback(() => {
+  }, [loopPlayer]);
+  // Effective key for display
+  const effectiveKey = useMemo(() => {
     return ChordTransposer.getEffectiveKey(currentKey, capoPosition);
   }, [currentKey, capoPosition]);
 
+  // Load/select loops when effective key changes
   useEffect(() => {
-    // Update loops when key or capo changes
-    if (currentKey) {
-      const effectiveKey = getEffectiveKey();
-      loadLoopsForKey(effectiveKey);
-    }
-  }, [currentKey, capoPosition, loadLoopsForKey, getEffectiveKey]);
+    if (!currentKey) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        console.log(`Loading loops for key: ${effectiveKey}, currentSongIndex: ${currentSongIndex}`);
+        const loops = await dataLoader.getLoopsByKey(effectiveKey);
+        if (cancelled) return;
+        setAvailableLoops(loops);
+        if (loops.length > 0) {
+          const newLoop = loops[0];
+          if (!currentLoop || currentLoop.id !== newLoop.id) {
+            setCurrentLoop(newLoop);
+          }
+        }
+      } catch (error) {
+        console.error('Error loading loops:', error);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [effectiveKey, currentSongIndex, currentKey, currentLoop]);
+
+  // Auto-start or crossfade when loop selection changes
+  useEffect(() => {
+    const doStart = async () => {
+      if (!settings.autoStartLoops) return;
+      if (!currentLoop) return;
+      const id = `${currentLoop.key}-${currentLoop.style}`;
+      if (loopCurrentId === id) return;
+      try {
+        await autoStartLoop(currentLoop);
+        if (!hasAutoStarted) setHasAutoStarted(true);
+      } catch (e) {
+        console.error('Autostart failed', e);
+      }
+    };
+    void doStart();
+  }, [settings.autoStartLoops, currentLoop, loopCurrentId, autoStartLoop, hasAutoStarted]);
 
 
   const goToNextSong = () => {
@@ -179,58 +145,33 @@ export const PerformanceView: React.FC<PerformanceViewProps> = ({
     }
   };
 
-  const togglePlayback = () => {
+  const togglePlayback = async () => {
     if (!currentLoop) return;
-
     if (isPlaying) {
       pauseAudio();
     } else {
-      playAudio();
-    }
-  };
-
-  const playAudio = async () => {
-    if (!currentLoop) return;
-
-    try {
-      const trackId = `${currentLoop.key}-${currentLoop.style}`;
-      
-      // Clear user pause flag when explicitly playing
-      setUserPaused(false);
-      
-      if (enhancedAudioManager.hasActiveTrack()) {
-        enhancedAudioManager.resume();
+      // If a loop is selected but not playing yet, play it.
+      if (!loopPlayer.currentId) {
+        await autoStartLoop(currentLoop);
       } else {
-        await enhancedAudioManager.play(currentLoop.filePath, trackId);
-        enhancedAudioManager.setMasterVolume(volume);
+        loopPlayer.resume();
+        setIsPlaying(true);
       }
-      
-      setIsPlaying(true);
-    } catch (error) {
-      console.error('Error playing audio:', error);
     }
   };
+
+  // playAudio merged into togglePlayback via autoStartLoop/resume
 
   const pauseAudio = () => {
-    console.log('Pause button clicked, isPlaying:', isPlaying, 'hasPlayingTracks:', enhancedAudioManager.hasPlayingTracks());
-    
-    // Set user pause flag to prevent state sync from overriding
-    setUserPaused(true);
+    console.log('Pause button clicked, isPlaying:', isPlaying);
     setIsPlaying(false);
-    
-    if (settings.autoStartLoops) {
-      // Use fade out instead of hard stop - fade out ALL tracks
-      enhancedAudioManager.fadeOutAll(settings.loopFadeOutDuration);
-    } else {
-      // Always pause immediately for non-auto-start mode
-      enhancedAudioManager.pause();
-    }
+    loopPlayer.pause();
   };
 
 
   const handleVolumeChange = (newVolume: number) => {
     setVolume(newVolume);
-    enhancedAudioManager.setMasterVolume(newVolume);
+    loopPlayer.setVolume(newVolume);
   };
 
   const transposeUp = () => {
@@ -371,7 +312,7 @@ export const PerformanceView: React.FC<PerformanceViewProps> = ({
             <div className="flex items-center justify-between mb-3">
               <div className="text-sm">
                 <div className="font-medium">Chord Key: {currentKey}</div>
-                <div className="text-muted-foreground">Effective Key: {getEffectiveKey()}</div>
+                <div className="text-muted-foreground">Effective Key: {effectiveKey}</div>
               </div>
               <button
                 onClick={resetToOriginal}
@@ -474,7 +415,7 @@ export const PerformanceView: React.FC<PerformanceViewProps> = ({
 
         {!currentLoop && availableLoops.length === 0 && (
           <p className="text-xs text-muted-foreground mt-2 text-center">
-            No backing tracks available for key {getEffectiveKey()}
+            No backing tracks available for key {effectiveKey}
           </p>
         )}
       </div>

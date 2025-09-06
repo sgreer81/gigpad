@@ -88,7 +88,7 @@ pnpm preview
 - **PerformanceView**: Full-screen performance interface
 - **SetlistView**: Setlist management and selection
 - **ChordTransposer**: Real-time chord transposition engine
-- **AudioManager**: Backing track playback system
+- **Audio playback**: Implemented via Howler in `useLoopPlayer`
 
 ## 🎼 Adding Content
 

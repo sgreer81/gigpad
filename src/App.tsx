@@ -7,6 +7,7 @@ import { PerformancePrompt } from './components/PerformancePrompt';
 import { SongsView } from './components/SongsView';
 import { SettingsView } from './components/SettingsView';
 import { SetlistProvider } from './contexts/SetlistContext';
+import { Howler } from 'howler';
 import { SettingsProvider } from './contexts/SettingsContext';
 import { dataLoader } from './utils/dataLoader';
 import { setlistStorage } from './utils/setlistStorage';
@@ -25,8 +26,9 @@ function App() {
     setCurrentSongs([]);
   };
 
-  const handleResumePerformance = () => {
+  const handleResumePerformance = async () => {
     if (lastSetlist) {
+      try { await (Howler as unknown as { ctx?: AudioContext }).ctx?.resume?.(); } catch (e) { console.warn('Howler ctx resume failed on resume', e); }
       setCurrentSetlist(lastSetlist.setlist);
       setCurrentSongs(lastSetlist.songs);
       setCurrentView('performance');
@@ -40,6 +42,7 @@ function App() {
 
   const handlePerformSetlist = async (setlistId: string) => {
     try {
+      try { await (Howler as unknown as { ctx?: AudioContext }).ctx?.resume?.(); } catch (e) { console.warn('Howler ctx resume failed on setlist start', e); }
       // Load the setlist from localStorage
       const setlist = await setlistStorage.getSetlist(setlistId);
       if (!setlist) {
