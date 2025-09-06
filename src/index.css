@@ -82,18 +82,30 @@
     .safe-area-top {
       padding-top: max(16px, env(safe-area-inset-top));
     }
+    
+    .pb-safe {
+      padding-bottom: max(16px, env(safe-area-inset-bottom));
+    }
   }
   
-  /* iPad-specific safe area fixes - applies to both Safari and PWA */
+  /* iPad-specific safe area fixes - conservative approach */
   @media screen and (min-width: 768px) and (max-width: 1024px) {
     .safe-area-bottom {
-      padding-bottom: max(32px, env(safe-area-inset-bottom));
+      padding-bottom: max(20px, env(safe-area-inset-bottom));
+    }
+    
+    .pb-safe {
+      padding-bottom: max(20px, env(safe-area-inset-bottom));
     }
     
     /* iPad in landscape may need extra bottom padding */
     @media (orientation: landscape) {
       .safe-area-bottom {
-        padding-bottom: max(40px, env(safe-area-inset-bottom));
+        padding-bottom: max(24px, env(safe-area-inset-bottom));
+      }
+      
+      .pb-safe {
+        padding-bottom: max(24px, env(safe-area-inset-bottom));
       }
     }
   }
@@ -104,8 +116,16 @@
       padding-bottom: max(40px, env(safe-area-inset-bottom));
     }
     
+    .pb-safe {
+      padding-bottom: max(40px, env(safe-area-inset-bottom));
+    }
+    
     @media (orientation: landscape) {
       .safe-area-bottom {
+        padding-bottom: max(48px, env(safe-area-inset-bottom));
+      }
+      
+      .pb-safe {
         padding-bottom: max(48px, env(safe-area-inset-bottom));
       }
     }
@@ -155,51 +175,13 @@
     }
   }
   
-  /* Sticky bottom navigation for iOS */
+  /* Sticky bottom navigation */
   .sticky-bottom-nav {
-    position: fixed;
+    position: sticky;
     bottom: 0;
-    left: 0;
-    right: 0;
     z-index: 50;
     background: hsl(var(--card));
     border-top: 1px solid hsl(var(--border));
-    padding-bottom: max(8px, env(safe-area-inset-bottom));
-    /* Prevent iOS Safari from hiding on scroll */
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
-  }
-  
-  /* iPad-specific navigation fixes - applies to both Safari and PWA */
-  @media screen and (min-width: 768px) and (max-width: 1024px) {
-    .sticky-bottom-nav {
-      padding-bottom: max(32px, env(safe-area-inset-bottom));
-      /* Ensure minimum height for proper touch targets */
-      min-height: calc(64px + max(32px, env(safe-area-inset-bottom)));
-    }
-    
-    @media (orientation: landscape) {
-      .sticky-bottom-nav {
-        padding-bottom: max(40px, env(safe-area-inset-bottom));
-        min-height: calc(64px + max(40px, env(safe-area-inset-bottom)));
-      }
-    }
-  }
-  
-  /* PWA-specific navigation fixes for iPad */
-  @media screen and (min-width: 768px) and (max-width: 1024px) and (display-mode: standalone) {
-    .sticky-bottom-nav {
-      padding-bottom: max(32px, env(safe-area-inset-bottom));
-      /* Add extra height to ensure proper touch targets */
-      min-height: calc(64px + max(32px, env(safe-area-inset-bottom)));
-    }
-    
-    @media (orientation: landscape) {
-      .sticky-bottom-nav {
-        padding-bottom: max(40px, env(safe-area-inset-bottom));
-        min-height: calc(64px + max(40px, env(safe-area-inset-bottom)));
-      }
-    }
   }
   
   /* Audio controls sticky positioning */
@@ -233,34 +215,32 @@
     }
   }
   
-  /* Main content with proper bottom spacing */
-  .main-content-with-nav {
-    padding-bottom: calc(64px + max(16px, env(safe-area-inset-bottom)));
-  }
+  /* Remove legacy padding rule; main is the scroll container now */
+  .main-content-with-nav { padding-bottom: 0; }
   
   /* Performance mode content spacing */
   .performance-content-with-audio {
     padding-bottom: calc(120px + max(16px, env(safe-area-inset-bottom)));
   }
   
-  /* iPad-specific content spacing fixes - applies to both Safari and PWA */
+  /* iPad-specific content spacing fixes - conservative approach */
   @media screen and (min-width: 768px) and (max-width: 1024px) {
     .main-content-with-nav {
-      padding-bottom: calc(64px + max(40px, env(safe-area-inset-bottom)));
+      padding-bottom: calc(64px + max(20px, env(safe-area-inset-bottom)));
     }
     
     .performance-content-with-audio {
-      padding-bottom: calc(120px + max(40px, env(safe-area-inset-bottom)));
+      padding-bottom: calc(120px + max(20px, env(safe-area-inset-bottom)));
     }
     
-    /* iPad in landscape needs even more padding */
+    /* iPad in landscape needs a bit more padding */
     @media (orientation: landscape) {
       .main-content-with-nav {
-        padding-bottom: calc(64px + max(48px, env(safe-area-inset-bottom)));
+        padding-bottom: calc(64px + max(24px, env(safe-area-inset-bottom)));
       }
       
       .performance-content-with-audio {
-        padding-bottom: calc(120px + max(48px, env(safe-area-inset-bottom)));
+        padding-bottom: calc(120px + max(24px, env(safe-area-inset-bottom)));
       }
     }
   }
@@ -379,17 +359,17 @@
     overflow: hidden;
   }
   
-  /* iPad-specific scrollable content fix - applies to both Safari and PWA */
+  /* iPad-specific scrollable content fix - conservative approach */
   @media screen and (min-width: 768px) and (max-width: 1024px) {
     .scrollable-content {
       /* Ensure scrollable areas have proper bottom padding on iPad */
-      padding-bottom: max(48px, env(safe-area-inset-bottom)) !important;
+      padding-bottom: max(32px, env(safe-area-inset-bottom)) !important;
     }
     
     /* For settings and other views that might get cut off */
     .settings-view,
     .songs-view {
-      padding-bottom: max(120px, calc(64px + max(40px, env(safe-area-inset-bottom)))) !important;
+      padding-bottom: max(100px, calc(64px + max(20px, env(safe-area-inset-bottom)))) !important;
     }
   }
   
@@ -402,21 +382,6 @@
     .settings-view,
     .songs-view {
       padding-bottom: max(120px, calc(64px + max(40px, env(safe-area-inset-bottom)))) !important;
-    }
-  }
-  
-  /* Additional PWA detection methods for better compatibility */
-  @media screen and (min-width: 768px) and (max-width: 1024px) {
-    /* Detect PWA via navigator.standalone (iOS) */
-    @supports (-webkit-touch-callout: none) {
-      body.pwa-mode .sticky-bottom-nav {
-        padding-bottom: max(32px, env(safe-area-inset-bottom));
-        min-height: calc(64px + max(32px, env(safe-area-inset-bottom)));
-      }
-      
-      body.pwa-mode .main-content-with-nav {
-        padding-bottom: calc(64px + max(40px, env(safe-area-inset-bottom)));
-      }
     }
   }
 }

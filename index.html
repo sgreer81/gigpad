@@ -64,7 +64,7 @@
               console.log('SW registered: ', registration);
               
               // Force update in development
-              if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+              if (location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.hostname.includes('ngrok-free.app')) {
                 registration.addEventListener('updatefound', () => {
                   const newWorker = registration.installing;
                   newWorker.addEventListener('statechange', () => {

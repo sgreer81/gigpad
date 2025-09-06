@@ -270,7 +270,7 @@ export const SongsView: React.FC<SongsViewProps> = ({ className = '' }) => {
             </div>
           )}
         </div>
-        <div className="song-detail-content overflow-y-auto p-4">
+        <div className="song-detail-content p-4 pb-safe">
           <FullSongDisplay 
             song={selectedSong} 
             currentKey={selectedSongKey}
@@ -299,7 +299,7 @@ export const SongsView: React.FC<SongsViewProps> = ({ className = '' }) => {
         </div>
       </div>
 
-      <div className="songs-list overflow-y-auto p-4">
+      <div className="songs-list p-4 pb-safe">
         {filteredSongs.length === 0 ? (
           <div className="empty-state text-center py-12">
             <Music className="w-16 h-16 text-muted-foreground mx-auto mb-4" />

@@ -122,13 +122,8 @@ function App() {
     <SettingsProvider>
       <SetlistProvider>
         <div className="app ios-safe-height flex flex-col bg-background text-foreground min-h-screen">
-        {/* Main content area */}
-        <main className={`flex-1 overflow-hidden ${
-          !(currentView === 'performance' && currentSetlist && currentSongs.length > 0) && 
-          currentView !== 'setlist-editor'
-            ? 'main-content-with-nav' 
-            : ''
-        }`}>
+        {/* Main content area (single scroll container) */}
+        <main className="flex-1 min-h-0 overflow-auto">
           {renderCurrentView()}
         </main>
 

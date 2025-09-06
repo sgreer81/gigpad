@@ -55,13 +55,13 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ className = '' }) =>
   };
 
   return (
-    <div className={`settings-view p-4 ${className}`}>
-      <div className="header mb-6">
-        <h1 className="text-3xl font-bold text-foreground mb-2">Settings</h1>
-        <p className="text-muted-foreground">Customize your performance experience</p>
-      </div>
+    <div className={`settings-view p-4 pb-safe ${className}`}>
+        <div className="header mb-6">
+          <h1 className="text-3xl font-bold text-foreground mb-2">Settings</h1>
+          <p className="text-muted-foreground">Customize your performance experience</p>
+        </div>
 
-      <div className="settings-sections space-y-6">
+        <div className="settings-sections space-y-6">
         {/* Appearance Section */}
         <div className="settings-section">
           <h2 className="text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
