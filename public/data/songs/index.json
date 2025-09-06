@@ -1,5 +1,13 @@
 [
   {
+    "id": "10000-reasons",
+    "title": "10,000 Reasons (Bless the Lord)",
+    "artist": "Jonas Myrin & Matt Redman",
+    "originalKey": "G",
+    "tempo": 73,
+    "capoPosition": 0
+  },
+  {
     "id": "his-glory-and-my-good",
     "title": "His Glory and My Good",
     "artist": "Cityalight",

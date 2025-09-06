@@ -1,6 +1,7 @@
 import type { Song, Setlist, LoopTrack } from '../types';
+import { ChordProParser } from './chordProParser';
 
-// Data loading utilities for static JSON files
+// Data loading utilities for ChordPro song files and JSON metadata
 interface SongIndex {
   id: string;
   title: string;
@@ -109,21 +110,16 @@ class DataLoader {
     }
 
     try {
-      const response = await fetch(`/data/songs/${id}.json`);
+      // Load ChordPro file
+      const response = await fetch(`/data/songs/${id}.chordpro`);
+      
       if (!response.ok) {
         throw new Error(`Failed to load song ${id}: ${response.statusText}`);
       }
-      const songData = await response.json();
       
-      // Convert date strings to Date objects if metadata exists
-      const song: Song = {
-        ...songData,
-        metadata: songData.metadata ? {
-          ...songData.metadata,
-          createdAt: new Date(songData.metadata.createdAt),
-          updatedAt: new Date(songData.metadata.updatedAt),
-        } : undefined
-      };
+      // Parse ChordPro format
+      const chordproContent = await response.text();
+      const song = ChordProParser.parseChordPro(chordproContent, id);
       
       // Cache the loaded song
       this.individualSongsCache.set(id, song);
