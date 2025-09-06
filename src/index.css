@@ -53,9 +53,33 @@
   * {
     @apply border-border;
   }
+  
+  html {
+    /* Fix iOS Safari viewport issues */
+    height: 100%;
+    height: -webkit-fill-available;
+  }
+  
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
+    height: 100%;
+    height: -webkit-fill-available;
+    /* Prevent iOS Safari bounce scrolling */
+    overscroll-behavior: none;
+    /* Ensure proper touch handling */
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* iOS Safari safe area support */
+  @supports (padding: max(0px)) {
+    .safe-area-bottom {
+      padding-bottom: max(16px, env(safe-area-inset-bottom));
+    }
+    
+    .safe-area-top {
+      padding-top: max(16px, env(safe-area-inset-top));
+    }
   }
 }
 
@@ -79,5 +103,54 @@
   /* Lyric display styling */
   .lyrics {
     @apply font-sans text-base leading-relaxed;
+  }
+  
+  /* iOS Safari viewport fixes */
+  .ios-safe-height {
+    height: 100vh;
+    height: -webkit-fill-available;
+  }
+  
+  /* Sticky bottom navigation for iOS */
+  .sticky-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    background: hsl(var(--card));
+    border-top: 1px solid hsl(var(--border));
+    padding-bottom: env(safe-area-inset-bottom);
+    /* Prevent iOS Safari from hiding on scroll */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+  }
+  
+  /* Audio controls sticky positioning */
+  .sticky-audio-controls {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 40;
+    background: hsl(var(--card));
+    border-top: 1px solid hsl(var(--border));
+    padding-bottom: env(safe-area-inset-bottom);
+    /* Force hardware acceleration */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    /* Prevent disappearing on iOS */
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+  
+  /* Main content with proper bottom spacing */
+  .main-content-with-nav {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom));
+  }
+  
+  /* Performance mode content spacing */
+  .performance-content-with-audio {
+    padding-bottom: calc(120px + env(safe-area-inset-bottom));
   }
 }

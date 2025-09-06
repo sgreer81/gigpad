@@ -172,9 +172,9 @@ export const PerformanceView: React.FC<PerformanceViewProps> = ({
   }
 
   return (
-    <div className={`performance-view flex flex-col h-full ${className}`}>
+    <div className={`performance-view ios-safe-height flex flex-col ${className}`}>
       {/* Header with navigation and controls */}
-      <div className="performance-header bg-card border-b border-border p-4">
+      <div className="performance-header bg-card border-b border-border p-4 safe-area-top">
         <div className="flex items-center justify-between mb-4">
           <button
             onClick={onBack}
@@ -263,7 +263,7 @@ export const PerformanceView: React.FC<PerformanceViewProps> = ({
       </div>
 
       {/* Song content */}
-      <div className="song-content flex-1 overflow-y-auto p-4">
+      <div className="song-content flex-1 overflow-y-auto p-4 performance-content-with-audio">
         <FullSongDisplay
           song={currentSong}
           currentKey={currentKey}
@@ -272,7 +272,7 @@ export const PerformanceView: React.FC<PerformanceViewProps> = ({
       </div>
 
       {/* Audio controls */}
-      <div className="audio-controls bg-card border-t border-border p-4">
+      <div className="sticky-audio-controls p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button

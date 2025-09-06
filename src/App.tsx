@@ -62,18 +62,24 @@ function App() {
   };
 
   return (
-    <div className="app h-screen flex flex-col bg-background text-foreground">
+    <div className="app ios-safe-height flex flex-col bg-background text-foreground">
       {/* Main content area */}
-      <main className="flex-1 overflow-hidden">
+      <main className={`flex-1 overflow-hidden ${
+        !(currentView === 'performance' && currentSetlist && currentSongs.length > 0) 
+          ? 'main-content-with-nav' 
+          : ''
+      }`}>
         {renderCurrentView()}
       </main>
 
       {/* Bottom navigation - hide only when actually performing */}
       {!(currentView === 'performance' && currentSetlist && currentSongs.length > 0) && (
-        <Navigation
-          currentView={currentView}
-          onViewChange={setCurrentView}
-        />
+        <div className="sticky-bottom-nav">
+          <Navigation
+            currentView={currentView}
+            onViewChange={setCurrentView}
+          />
+        </div>
       )}
     </div>
   );
