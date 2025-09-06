@@ -1,9 +1,9 @@
 import React from 'react';
-import { Music, List, Settings } from 'lucide-react';
+import { Music, List, Settings, Library } from 'lucide-react';
 
 interface NavigationProps {
-  currentView: 'setlists' | 'performance' | 'songs';
-  onViewChange: (view: 'setlists' | 'performance' | 'songs') => void;
+  currentView: 'setlists' | 'performance' | 'songs' | 'settings';
+  onViewChange: (view: 'setlists' | 'performance' | 'songs' | 'settings') => void;
   className?: string;
 }
 
@@ -15,7 +15,8 @@ export const Navigation: React.FC<NavigationProps> = ({
   const navItems = [
     { id: 'setlists' as const, label: 'Setlists', icon: List },
     { id: 'performance' as const, label: 'Performance', icon: Music },
-    { id: 'songs' as const, label: 'Songs', icon: Settings },
+    { id: 'songs' as const, label: 'Songs', icon: Library },
+    { id: 'settings' as const, label: 'Settings', icon: Settings },
   ];
 
   return (

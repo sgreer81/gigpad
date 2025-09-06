@@ -4,10 +4,11 @@ import { SetlistView } from './components/SetlistView';
 import { PerformanceView } from './components/PerformanceView';
 import { PerformancePrompt } from './components/PerformancePrompt';
 import { SongsView } from './components/SongsView';
+import { SettingsView } from './components/SettingsView';
 import type { Setlist, Song } from './types';
 
 function App() {
-  const [currentView, setCurrentView] = useState<'setlists' | 'performance' | 'songs'>('setlists');
+  const [currentView, setCurrentView] = useState<'setlists' | 'performance' | 'songs' | 'settings'>('setlists');
   const [currentSetlist, setCurrentSetlist] = useState<Setlist | null>(null);
   const [currentSongs, setCurrentSongs] = useState<Song[]>([]);
   const [lastSetlist, setLastSetlist] = useState<{ setlist: Setlist; songs: Song[] } | null>(null);
@@ -56,6 +57,8 @@ function App() {
         );
       case 'songs':
         return <SongsView />;
+      case 'settings':
+        return <SettingsView />;
       default:
         return <SetlistView onSetlistSelect={handleSetlistSelect} />;
     }
