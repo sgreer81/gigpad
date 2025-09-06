@@ -1,0 +1,90 @@
+[
+  {
+    "id": "c-ambient-pad",
+    "key": "C",
+    "style": "ambient-pad",
+    "filePath": "/data/loops/audio/C-ambient-pad.mp3",
+    "duration": 8.0,
+    "metadata": {
+      "tempo": 80,
+      "description": "Warm ambient pad in C major"
+    }
+  },
+  {
+    "id": "b-ambient-pad",
+    "key": "B",
+    "style": "ambient-pad",
+    "filePath": "/data/loops/audio/B-ambient-pad.mp3",
+    "duration": 10,
+    "metadata": {
+      "tempo": 80,
+      "description": "Warm ambient pad in B major"
+    }
+  },
+  {
+    "id": "d-ambient-pad",
+    "key": "D",
+    "style": "ambient-pad",
+    "filePath": "/data/loops/audio/D-ambient-pad.mp3",
+    "duration": 8.0,
+    "metadata": {
+      "tempo": 80,
+      "description": "Warm ambient pad in D major"
+    }
+  },
+  {
+    "id": "e-ambient-pad",
+    "key": "E",
+    "style": "ambient-pad",
+    "filePath": "/data/loops/audio/E-ambient-pad.mp3",
+    "duration": 8.0,
+    "metadata": {
+      "tempo": 80,
+      "description": "Warm ambient pad in E major"
+    }
+  },
+  {
+    "id": "em-ambient-pad",
+    "key": "Em",
+    "style": "ambient-pad",
+    "filePath": "/data/loops/audio/Em-ambient-pad.mp3",
+    "duration": 8.0,
+    "metadata": {
+      "tempo": 80,
+      "description": "Warm ambient pad in E minor"
+    }
+  },
+  {
+    "id": "g-ambient-pad",
+    "key": "G",
+    "style": "ambient-pad",
+    "filePath": "/data/loops/audio/G-ambient-pad.mp3",
+    "duration": 8.0,
+    "metadata": {
+      "tempo": 80,
+      "description": "Warm ambient pad in G major"
+    }
+  },
+  {
+    "id": "a-ambient-pad",
+    "key": "A",
+    "style": "ambient-pad",
+    "filePath": "/data/loops/audio/A-ambient-pad.mp3",
+    "duration": 8.0,
+    "metadata": {
+      "tempo": 80,
+      "description": "Warm ambient pad in A major"
+    }
+  },
+  {
+    "id": "bm-ambient-pad",
+    "key": "Bm",
+    "style": "ambient-pad",
+    "filePath": "/data/loops/audio/Bm-ambient-pad.mp3",
+    "duration": 8.0,
+    "metadata": {
+      "tempo": 80,
+      "description": "Warm ambient pad in B minor"
+    }
+  }
+]
