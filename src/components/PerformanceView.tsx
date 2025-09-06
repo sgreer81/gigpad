@@ -319,60 +319,55 @@ export const PerformanceView: React.FC<PerformanceViewProps> = ({
   }
 
   return (
-    <div className={`performance-view ios-safe-height flex flex-col ${className}`}>
-      {/* Header with navigation and controls */}
-      <div className="performance-header bg-card border-b border-border p-4 safe-area-top">
-        <div className="flex items-center justify-between mb-4">
-          <button
-            onClick={onBack}
-            className="touch-target flex items-center gap-2 text-muted-foreground hover:text-foreground"
-          >
-            <ArrowLeft size={20} />
-            <span>Back</span>
-          </button>
-          
-          <div className="text-center">
-            <h2 className="font-semibold text-foreground">{setlist.name}</h2>
-            <p className="text-sm text-muted-foreground">
-              {currentSongIndex + 1} of {songs.length}
-            </p>
+    <div className={`performance-view flex flex-col ${className}`}>
+      {/* Header with navigation and controls (sticky, compact) */}
+        <div className="performance-header fixed top-0 left-0 right-0 z-40 w-full bg-card/95 backdrop-blur border-b border-border">
+          <div className="h-12 flex items-center gap-2 px-2">
+            <button
+              onClick={onBack}
+              aria-label="Back"
+              className="touch-target p-2 rounded-lg text-muted-foreground hover:text-foreground"
+            >
+              <ArrowLeft size={18} />
+            </button>
+
+            <div className="flex-1 min-w-0 text-center">
+              <div className="text-sm font-semibold text-foreground truncate">{currentSong.title}</div>
+              <div className="text-[11px] text-muted-foreground truncate">
+                {setlist.name} • {currentSongIndex + 1}/{songs.length}
+              </div>
+            </div>
+
+            <div className="flex items-center gap-1">
+              <button
+                onClick={goToPreviousSong}
+                disabled={currentSongIndex === 0}
+                aria-label="Previous song"
+                className="touch-target p-2 rounded-lg bg-secondary text-secondary-foreground disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ChevronLeft size={18} />
+              </button>
+              <button
+                onClick={goToNextSong}
+                disabled={currentSongIndex === songs.length - 1}
+                aria-label="Next song"
+                className="touch-target p-2 rounded-lg bg-secondary text-secondary-foreground disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ChevronRight size={18} />
+              </button>
+              <button
+                onClick={() => setShowTransposeControls(!showTransposeControls)}
+                aria-label="Performance settings"
+                className="touch-target p-2 rounded-lg text-muted-foreground hover:text-foreground"
+              >
+                <Settings size={18} />
+              </button>
+            </div>
           </div>
-
-          <button
-            onClick={() => setShowTransposeControls(!showTransposeControls)}
-            className="touch-target text-muted-foreground hover:text-foreground"
-          >
-            <Settings size={20} />
-          </button>
-        </div>
-
-        {/* Song navigation */}
-        <div className="flex items-center justify-between">
-          <button
-            onClick={goToPreviousSong}
-            disabled={currentSongIndex === 0}
-            className="touch-target p-2 rounded-lg bg-secondary text-secondary-foreground disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <ChevronLeft size={24} />
-          </button>
-
-          <div className="text-center flex-1 mx-4">
-            <h1 className="text-lg font-bold text-foreground">{currentSong.title}</h1>
-            <p className="text-sm text-muted-foreground">{currentSong.artist}</p>
-          </div>
-
-          <button
-            onClick={goToNextSong}
-            disabled={currentSongIndex === songs.length - 1}
-            className="touch-target p-2 rounded-lg bg-secondary text-secondary-foreground disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <ChevronRight size={24} />
-          </button>
-        </div>
 
         {/* Transpose controls */}
         {showTransposeControls && (
-          <div className="mt-4 p-4 bg-secondary rounded-lg">
+          <div className="p-3 bg-secondary border-t border-border">
             <div className="flex items-center justify-between mb-3">
               <div className="text-sm">
                 <div className="font-medium">Chord Key: {currentKey}</div>
@@ -430,14 +425,18 @@ export const PerformanceView: React.FC<PerformanceViewProps> = ({
         )}
       </div>
 
-      {/* Song content */}
-      <div className="song-content flex-1 overflow-y-auto p-4 performance-content-with-audio">
+      {/* Spacer to offset fixed header height */}
+      <div className="h-12" />
+      {/* Song content (no inner scroll; main handles scrolling) */}
+      <div className="song-content flex-1 p-4 pt-2 performance-content-with-audio">
         <FullSongDisplay
           song={currentSong}
           currentKey={currentKey}
           capoPosition={capoPosition}
         />
       </div>
+
+      <div className="h-12" />
 
       {/* Audio controls */}
       <div className="sticky-audio-controls p-4">
