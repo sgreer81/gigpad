@@ -14,6 +14,7 @@ import { FullSongDisplay } from './ChordLyricDisplay';
 import { ChordTransposer } from '../utils/chordTransposer';
 import { dataLoader } from '../utils/dataLoader';
 import { enhancedAudioManager } from '../utils/enhancedAudioManager';
+import { SongOverrideStorage } from '../utils/songOverrides';
 import { useSettings } from '../contexts/SettingsContext';
 
 interface PerformanceViewProps {
@@ -46,15 +47,22 @@ export const PerformanceView: React.FC<PerformanceViewProps> = ({
 
   useEffect(() => {
     if (currentSong) {
-      // Set initial key (custom key from setlist or original key)
-      const initialKey = setlistSong?.customKey || currentSong.originalKey;
+      // Priority order: setlist custom -> song overrides -> original song
+      const songOverride = SongOverrideStorage.get(currentSong.id);
       
-      // Set initial capo position
-      const initialCapo = setlistSong?.customCapo ?? currentSong.capoPosition ?? 0;
+      // Set initial key (setlist custom key > override > original key)
+      const initialKey = setlistSong?.customKey || 
+                        songOverride?.customKey || 
+                        currentSong.originalKey;
+      
+      // Set initial capo position (setlist custom capo > override > original capo)
+      const initialCapo = setlistSong?.customCapo ?? 
+                         songOverride?.customCapo ?? 
+                         currentSong.capoPosition ?? 0;
       setCapoPosition(initialCapo);
 
       // Always update key when song changes - this will trigger the loop loading
-      console.log(`Song changed: ${currentSong.title}, setting key to: ${initialKey}`);
+      console.log(`Song changed: ${currentSong.title}, setting key to: ${initialKey}, capo: ${initialCapo}`);
       setCurrentKey(initialKey);
     }
   }, [currentSong, setlistSong]);
@@ -141,12 +149,18 @@ export const PerformanceView: React.FC<PerformanceViewProps> = ({
     }
   }, [currentSongIndex, hasAutoStarted, currentLoop, settings.autoStartLoops, autoStartLoop]);
 
+  // Calculate the effective key considering both transposition and capo
+  const getEffectiveKey = useCallback(() => {
+    return ChordTransposer.getEffectiveKey(currentKey, capoPosition);
+  }, [currentKey, capoPosition]);
+
   useEffect(() => {
-    // Update loops when key changes
+    // Update loops when key or capo changes
     if (currentKey) {
-      loadLoopsForKey(currentKey);
+      const effectiveKey = getEffectiveKey();
+      loadLoopsForKey(effectiveKey);
     }
-  }, [currentKey, loadLoopsForKey]);
+  }, [currentKey, capoPosition, loadLoopsForKey, getEffectiveKey]);
 
 
   const goToNextSong = () => {
@@ -222,11 +236,57 @@ export const PerformanceView: React.FC<PerformanceViewProps> = ({
   const transposeUp = () => {
     const newKey = ChordTransposer.transposeChordBySemitones(currentKey, 1);
     setCurrentKey(newKey);
+    saveOverrides(newKey, capoPosition);
   };
 
   const transposeDown = () => {
     const newKey = ChordTransposer.transposeChordBySemitones(currentKey, -1);
     setCurrentKey(newKey);
+    saveOverrides(newKey, capoPosition);
+  };
+
+  const capoUp = () => {
+    if (capoPosition < 12) {
+      const newCapo = capoPosition + 1;
+      setCapoPosition(newCapo);
+      saveOverrides(currentKey, newCapo);
+    }
+  };
+
+  const capoDown = () => {
+    if (capoPosition > 0) {
+      const newCapo = capoPosition - 1;
+      setCapoPosition(newCapo);
+      saveOverrides(currentKey, newCapo);
+    }
+  };
+
+  const saveOverrides = (key: string, capo: number) => {
+    if (!currentSong) return;
+    
+    // Don't save if setlist has custom settings (setlist overrides take precedence)
+    if (setlistSong?.customKey || setlistSong?.customCapo !== undefined) {
+      console.log('Not saving overrides - setlist has custom settings');
+      return;
+    }
+    
+    // Check if values are different from original
+    const isKeyDifferent = key !== currentSong.originalKey;
+    const isCapoDifferent = capo !== (currentSong.capoPosition ?? 0);
+    
+    if (isKeyDifferent || isCapoDifferent) {
+      // Save override
+      SongOverrideStorage.set(
+        currentSong.id,
+        isKeyDifferent ? key : undefined,
+        isCapoDifferent ? capo : undefined
+      );
+      console.log(`Saved override for ${currentSong.title}: key=${key}, capo=${capo}`);
+    } else {
+      // Remove override if back to original values
+      SongOverrideStorage.remove(currentSong.id);
+      console.log(`Removed override for ${currentSong.title} - back to original values`);
+    }
   };
 
   const resetToOriginal = () => {
@@ -234,6 +294,12 @@ export const PerformanceView: React.FC<PerformanceViewProps> = ({
     const originalCapo = setlistSong?.customCapo ?? currentSong.capoPosition ?? 0;
     setCurrentKey(originalKey);
     setCapoPosition(originalCapo);
+    
+    // Clear overrides if not using setlist custom settings
+    if (!setlistSong?.customKey && !setlistSong?.customCapo) {
+      SongOverrideStorage.remove(currentSong.id);
+      console.log(`Cleared overrides for ${currentSong.title}`);
+    }
   };
 
   if (!currentSong) {
@@ -308,7 +374,10 @@ export const PerformanceView: React.FC<PerformanceViewProps> = ({
         {showTransposeControls && (
           <div className="mt-4 p-4 bg-secondary rounded-lg">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-sm font-medium">Key: {currentKey}</span>
+              <div className="text-sm">
+                <div className="font-medium">Chord Key: {currentKey}</div>
+                <div className="text-muted-foreground">Effective Key: {getEffectiveKey()}</div>
+              </div>
               <button
                 onClick={resetToOriginal}
                 className="text-xs text-primary hover:text-primary/80 flex items-center gap-1"
@@ -317,7 +386,9 @@ export const PerformanceView: React.FC<PerformanceViewProps> = ({
                 Reset
               </button>
             </div>
-            <div className="flex items-center gap-2">
+            
+            {/* Chord Transpose Controls */}
+            <div className="flex items-center gap-2 mb-3">
               <button
                 onClick={transposeDown}
                 className="touch-target px-3 py-1 bg-background text-foreground rounded border border-border"
@@ -325,7 +396,7 @@ export const PerformanceView: React.FC<PerformanceViewProps> = ({
                 ♭
               </button>
               <span className="text-sm text-muted-foreground flex-1 text-center">
-                Transpose
+                Transpose Chords
               </span>
               <button
                 onClick={transposeUp}
@@ -334,11 +405,27 @@ export const PerformanceView: React.FC<PerformanceViewProps> = ({
                 ♯
               </button>
             </div>
-            {capoPosition > 0 && (
-              <p className="text-xs text-muted-foreground mt-2 text-center">
+
+            {/* Capo Controls */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={capoDown}
+                disabled={capoPosition === 0}
+                className="touch-target px-3 py-1 bg-background text-foreground rounded border border-border disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                -
+              </button>
+              <span className="text-sm text-muted-foreground flex-1 text-center">
                 Capo: {capoPosition}
-              </p>
-            )}
+              </span>
+              <button
+                onClick={capoUp}
+                disabled={capoPosition >= 12}
+                className="touch-target px-3 py-1 bg-background text-foreground rounded border border-border disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                +
+              </button>
+            </div>
           </div>
         )}
       </div>
@@ -388,7 +475,7 @@ export const PerformanceView: React.FC<PerformanceViewProps> = ({
 
         {!currentLoop && availableLoops.length === 0 && (
           <p className="text-xs text-muted-foreground mt-2 text-center">
-            No backing tracks available for key {currentKey}
+            No backing tracks available for key {getEffectiveKey()}
           </p>
         )}
       </div>

@@ -149,6 +149,14 @@ export interface ChordTransposition {
   capoPosition: number;
 }
 
+// Song override types for persistent settings
+export interface SongOverride {
+  songId: string;
+  customKey?: string; // Transposed key
+  customCapo?: number; // Capo position
+  updatedAt: Date;
+}
+
 // Performance mode types
 export interface PerformanceState {
   currentSong: Song;

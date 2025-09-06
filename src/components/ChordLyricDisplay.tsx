@@ -6,7 +6,6 @@ interface ChordLyricDisplayProps {
   line: ChordLyricLine;
   originalKey: string;
   currentKey: string;
-  capoPosition?: number;
   className?: string;
 }
 
@@ -14,17 +13,16 @@ export const ChordLyricDisplay: React.FC<ChordLyricDisplayProps> = ({
   line,
   originalKey,
   currentKey,
-  capoPosition = 0,
   className = ''
 }) => {
-  // Transpose chords if key has changed
+  // Transpose chords if key has changed (capo doesn't affect chord display)
   const transposedChords = line.chords.map(chordPos => ({
     ...chordPos,
     chord: ChordTransposer.transposeChord(
       chordPos.chord,
       originalKey,
       currentKey,
-      capoPosition
+      0 // Don't include capo in chord transposition - it only affects effective key
     )
   }));
 
