@@ -1,0 +1,223 @@
+{
+  "id": "wonderwall",
+  "title": "Wonderwall",
+  "artist": "Oasis",
+  "originalKey": "Em",
+  "capoPosition": 2,
+  "tempo": 87,
+  "sections": [
+    {
+      "type": "intro",
+      "name": "Intro",
+      "content": [
+        {
+          "lyrics": "    ",
+          "chords": [
+            {
+              "chord": "Em7",
+              "position": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "verse",
+      "name": "Verse 1",
+      "content": [
+        {
+          "lyrics": "Today is gonna be the day that they're gonna throw it back to you",
+          "chords": [
+            {
+              "chord": "Em7",
+              "position": 0
+            },
+            {
+              "chord": "G",
+              "position": 32
+            },
+            {
+              "chord": "D",
+              "position": 45
+            },
+            {
+              "chord": "C",
+              "position": 60
+            }
+          ]
+        },
+        {
+          "lyrics": "By now you should've somehow realized what you gotta do",
+          "chords": [
+            {
+              "chord": "Em7",
+              "position": 0
+            },
+            {
+              "chord": "G",
+              "position": 25
+            },
+            {
+              "chord": "D",
+              "position": 40
+            },
+            {
+              "chord": "C",
+              "position": 55
+            }
+          ]
+        },
+        {
+          "lyrics": "I don't believe that anybody feels the way I do about you now",
+          "chords": [
+            {
+              "chord": "Em7",
+              "position": 0
+            },
+            {
+              "chord": "G",
+              "position": 30
+            },
+            {
+              "chord": "D",
+              "position": 45
+            },
+            {
+              "chord": "C",
+              "position": 60
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "chorus",
+      "name": "Chorus",
+      "content": [
+        {
+          "lyrics": "And all the roads we have to walk are winding",
+          "chords": [
+            {
+              "chord": "G",
+              "position": 0
+            },
+            {
+              "chord": "D",
+              "position": 20
+            },
+            {
+              "chord": "Em7",
+              "position": 35
+            },
+            {
+              "chord": "C",
+              "position": 45
+            }
+          ]
+        },
+        {
+          "lyrics": "And all the lights that lead us there are blinding",
+          "chords": [
+            {
+              "chord": "G",
+              "position": 0
+            },
+            {
+              "chord": "D",
+              "position": 20
+            },
+            {
+              "chord": "Em7",
+              "position": 35
+            },
+            {
+              "chord": "C",
+              "position": 47
+            }
+          ]
+        },
+        {
+          "lyrics": "There are many things that I would like to say to you",
+          "chords": [
+            {
+              "chord": "G",
+              "position": 0
+            },
+            {
+              "chord": "D",
+              "position": 25
+            },
+            {
+              "chord": "C",
+              "position": 50
+            }
+          ]
+        },
+        {
+          "lyrics": "But I don't know how",
+          "chords": [
+            {
+              "chord": "C",
+              "position": 0
+            },
+            {
+              "chord": "D",
+              "position": 8
+            },
+            {
+              "chord": "G",
+              "position": 18
+            }
+          ]
+        },
+        {
+          "lyrics": "Because maybe you're gonna be the one that saves me",
+          "chords": [
+            {
+              "chord": "C",
+              "position": 0
+            },
+            {
+              "chord": "Em7",
+              "position": 15
+            },
+            {
+              "chord": "G",
+              "position": 30
+            },
+            {
+              "chord": "Em7",
+              "position": 45
+            }
+          ]
+        },
+        {
+          "lyrics": "And after all you're my wonderwall",
+          "chords": [
+            {
+              "chord": "C",
+              "position": 0
+            },
+            {
+              "chord": "Em7",
+              "position": 15
+            },
+            {
+              "chord": "G",
+              "position": 25
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "createdAt": "2024-01-01T00:00:00Z",
+    "updatedAt": "2024-01-01T00:00:00Z",
+    "tags": [
+      "rock",
+      "90s",
+      "popular"
+    ]
+  }
+}

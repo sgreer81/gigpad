@@ -1,0 +1,801 @@
+{
+  "id": "his-glory-and-my-good",
+  "title": "His Glory and My Good",
+  "artist": "Cityalight",
+  "originalKey": "E",
+  "capoPosition": 0,
+  "tempo": 68,
+  "sections": [
+    {
+      "type": "intro",
+      "name": "Intro",
+      "content": [
+        {
+          "lyrics": "    ",
+          "chords": [
+            {
+              "chord": "Asus2",
+              "position": 0
+            },
+            {
+              "chord": "E",
+              "position": 6
+            },
+            {
+              "chord": "B",
+              "position": 8
+            },
+            {
+              "chord": "C#m7",
+              "position": 10
+            }
+          ]
+        },
+        {
+          "lyrics": "    ",
+          "chords": [
+            {
+              "chord": "Asus2",
+              "position": 0
+            },
+            {
+              "chord": "E",
+              "position": 6
+            },
+            {
+              "chord": "B",
+              "position": 8
+            },
+            {
+              "chord": "C#m7",
+              "position": 10
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "verse",
+      "name": "Verse 1",
+      "content": [
+        {
+          "lyrics": "I have seen my Father's glory",
+          "chords": [
+            {
+              "chord": "Asus2",
+              "position": 0
+            },
+            {
+              "chord": "E",
+              "position": 28
+            }
+          ]
+        },
+        {
+          "lyrics": "Revealed in Jesus Christ",
+          "chords": [
+            {
+              "chord": "B",
+              "position": 0
+            },
+            {
+              "chord": "C#m7",
+              "position": 23
+            }
+          ]
+        },
+        {
+          "lyrics": "And the more that I behold Him",
+          "chords": [
+            {
+              "chord": "Asus2",
+              "position": 0
+            },
+            {
+              "chord": "E",
+              "position": 29
+            }
+          ]
+        },
+        {
+          "lyrics": "The more He satisfies",
+          "chords": [
+            {
+              "chord": "B",
+              "position": 0
+            },
+            {
+              "chord": "C#m7",
+              "position": 19
+            }
+          ]
+        },
+        {
+          "lyrics": "When I gaze upon His beauty",
+          "chords": [
+            {
+              "chord": "A",
+              "position": 0
+            },
+            {
+              "chord": "E",
+              "position": 26
+            }
+          ]
+        },
+        {
+          "lyrics": "When I see Him as I should",
+          "chords": [
+            {
+              "chord": "B",
+              "position": 0
+            },
+            {
+              "chord": "C#m7",
+              "position": 26
+            }
+          ]
+        },
+        {
+          "lyrics": "Then my eyes are lifted upward",
+          "chords": [
+            {
+              "chord": "Asus2",
+              "position": 0
+            },
+            {
+              "chord": "E/G#",
+              "position": 30
+            }
+          ]
+        },
+        {
+          "lyrics": "For His glory and my good",
+          "chords": [
+            {
+              "chord": "B",
+              "position": 24
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "verse",
+      "name": "Verse 2",
+      "content": [
+        {
+          "lyrics": "There is hope in every trial",
+          "chords": [
+            {
+              "chord": "Asus2",
+              "position": 0
+            },
+            {
+              "chord": "E",
+              "position": 27
+            }
+          ]
+        },
+        {
+          "lyrics": "For I can trust the Lord",
+          "chords": [
+            {
+              "chord": "B",
+              "position": 0
+            },
+            {
+              "chord": "C#m7",
+              "position": 22
+            }
+          ]
+        },
+        {
+          "lyrics": "He will turn my heart towards Him",
+          "chords": [
+            {
+              "chord": "Asus2",
+              "position": 0
+            },
+            {
+              "chord": "E",
+              "position": 31
+            }
+          ]
+        },
+        {
+          "lyrics": "And help me bear the thorn",
+          "chords": [
+            {
+              "chord": "B",
+              "position": 0
+            },
+            {
+              "chord": "C#m7",
+              "position": 24
+            }
+          ]
+        },
+        {
+          "lyrics": "So in faith I follow Jesus",
+          "chords": [
+            {
+              "chord": "A",
+              "position": 0
+            },
+            {
+              "chord": "E",
+              "position": 25
+            }
+          ]
+        },
+        {
+          "lyrics": "On the road not understood",
+          "chords": [
+            {
+              "chord": "B",
+              "position": 0
+            },
+            {
+              "chord": "C#m7",
+              "position": 26
+            }
+          ]
+        },
+        {
+          "lyrics": "For I know that He is working",
+          "chords": [
+            {
+              "chord": "Asus2",
+              "position": 0
+            },
+            {
+              "chord": "E/G#",
+              "position": 29
+            }
+          ]
+        },
+        {
+          "lyrics": "For His glory and my good",
+          "chords": [
+            {
+              "chord": "B",
+              "position": 24
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "chorus",
+      "name": "Chorus 1",
+      "content": [
+        {
+          "lyrics": "To our God be the glory",
+          "chords": [
+            {
+              "chord": "E",
+              "position": 0
+            }
+          ]
+        },
+        {
+          "lyrics": "To our God be praise",
+          "chords": [
+            {
+              "chord": "A",
+              "position": 0
+            },
+            {
+              "chord": "E",
+              "position": 18
+            }
+          ]
+        },
+        {
+          "lyrics": "He alone, the name above all names",
+          "chords": [
+            {
+              "chord": "C#m7",
+              "position": 0
+            },
+            {
+              "chord": "B",
+              "position": 34
+            }
+          ]
+        },
+        {
+          "lyrics": "I will boast ever only in the Lord my God",
+          "chords": [
+            {
+              "chord": "E/G#",
+              "position": 0
+            },
+            {
+              "chord": "A",
+              "position": 12
+            },
+            {
+              "chord": "C#m7",
+              "position": 42
+            }
+          ]
+        },
+        {
+          "lyrics": "For I know His glory is my good",
+          "chords": [
+            {
+              "chord": "A",
+              "position": 0
+            },
+            {
+              "chord": "B",
+              "position": 30
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "verse",
+      "name": "Verse 3",
+      "content": [
+        {
+          "lyrics": "See the open arms of Jesus",
+          "chords": [
+            {
+              "chord": "Asus2",
+              "position": 0
+            },
+            {
+              "chord": "E",
+              "position": 26
+            }
+          ]
+        },
+        {
+          "lyrics": "Upon the cross that day",
+          "chords": [
+            {
+              "chord": "B",
+              "position": 0
+            },
+            {
+              "chord": "C#m7",
+              "position": 22
+            }
+          ]
+        },
+        {
+          "lyrics": "What they understood as weakness",
+          "chords": [
+            {
+              "chord": "Asus2",
+              "position": 0
+            },
+            {
+              "chord": "E",
+              "position": 30
+            }
+          ]
+        },
+        {
+          "lyrics": "Deserves my every praise",
+          "chords": [
+            {
+              "chord": "B",
+              "position": 0
+            },
+            {
+              "chord": "C#m7",
+              "position": 23
+            }
+          ]
+        },
+        {
+          "lyrics": "For the charge that was against me",
+          "chords": [
+            {
+              "chord": "A",
+              "position": 0
+            },
+            {
+              "chord": "E",
+              "position": 32
+            }
+          ]
+        },
+        {
+          "lyrics": "It was nailed into the wood",
+          "chords": [
+            {
+              "chord": "B",
+              "position": 0
+            },
+            {
+              "chord": "C#m7",
+              "position": 26
+            }
+          ]
+        },
+        {
+          "lyrics": "Yes I know that He has saved me",
+          "chords": [
+            {
+              "chord": "Asus2",
+              "position": 0
+            },
+            {
+              "chord": "E/G#",
+              "position": 30
+            }
+          ]
+        },
+        {
+          "lyrics": "For His glory and my good",
+          "chords": [
+            {
+              "chord": "B",
+              "position": 24
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "instrumental",
+      "name": "Instrumental",
+      "content": [
+        {
+          "lyrics": "    ",
+          "chords": [
+            {
+              "chord": "A",
+              "position": 0
+            },
+            {
+              "chord": "E/G#",
+              "position": 2
+            },
+            {
+              "chord": "C#m7",
+              "position": 8
+            },
+            {
+              "chord": "B",
+              "position": 14
+            }
+          ]
+        },
+        {
+          "lyrics": "    ",
+          "chords": [
+            {
+              "chord": "A",
+              "position": 0
+            },
+            {
+              "chord": "E/G#",
+              "position": 2
+            },
+            {
+              "chord": "C#m7",
+              "position": 8
+            },
+            {
+              "chord": "B",
+              "position": 14
+            }
+          ]
+        },
+        {
+          "lyrics": "    ",
+          "chords": [
+            {
+              "chord": "A",
+              "position": 0
+            },
+            {
+              "chord": "E/G#",
+              "position": 2
+            },
+            {
+              "chord": "C#m7",
+              "position": 8
+            },
+            {
+              "chord": "B",
+              "position": 14
+            }
+          ]
+        },
+        {
+          "lyrics": "    ",
+          "chords": [
+            {
+              "chord": "A",
+              "position": 0
+            },
+            {
+              "chord": "E/G#",
+              "position": 2
+            },
+            {
+              "chord": "B",
+              "position": 8
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "verse",
+      "name": "Verse 4",
+      "content": [
+        {
+          "lyrics": "Would I gladly be made nothing",
+          "chords": [
+            {
+              "chord": "Asus2",
+              "position": 0
+            },
+            {
+              "chord": "E",
+              "position": 29
+            }
+          ]
+        },
+        {
+          "lyrics": "That Christ would be made more",
+          "chords": [
+            {
+              "chord": "B",
+              "position": 0
+            },
+            {
+              "chord": "C#m7",
+              "position": 26
+            }
+          ]
+        },
+        {
+          "lyrics": "Would I seek the only kingdom",
+          "chords": [
+            {
+              "chord": "Asus2",
+              "position": 0
+            },
+            {
+              "chord": "E",
+              "position": 28
+            }
+          ]
+        },
+        {
+          "lyrics": "That far outweighs them all",
+          "chords": [
+            {
+              "chord": "B",
+              "position": 0
+            },
+            {
+              "chord": "C#m7",
+              "position": 25
+            }
+          ]
+        },
+        {
+          "lyrics": "I will stand before my Father",
+          "chords": [
+            {
+              "chord": "A",
+              "position": 0
+            },
+            {
+              "chord": "E",
+              "position": 28
+            }
+          ]
+        },
+        {
+          "lyrics": "Where the faithful saints have stood",
+          "chords": [
+            {
+              "chord": "B",
+              "position": 0
+            },
+            {
+              "chord": "C#m7",
+              "position": 32
+            }
+          ]
+        },
+        {
+          "lyrics": "And with joy my heart shall praise Him",
+          "chords": [
+            {
+              "chord": "Asus2",
+              "position": 0
+            },
+            {
+              "chord": "E/G#",
+              "position": 34
+            }
+          ]
+        },
+        {
+          "lyrics": "For His glory and my good",
+          "chords": [
+            {
+              "chord": "B",
+              "position": 24
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "chorus",
+      "name": "Chorus 2",
+      "content": [
+        {
+          "lyrics": "To our God be the glory",
+          "chords": [
+            {
+              "chord": "E",
+              "position": 0
+            }
+          ]
+        },
+        {
+          "lyrics": "To our God be praise",
+          "chords": [
+            {
+              "chord": "A",
+              "position": 0
+            },
+            {
+              "chord": "E",
+              "position": 18
+            }
+          ]
+        },
+        {
+          "lyrics": "He alone, the name above all names",
+          "chords": [
+            {
+              "chord": "C#m7",
+              "position": 0
+            },
+            {
+              "chord": "B",
+              "position": 34
+            }
+          ]
+        },
+        {
+          "lyrics": "I will boast ever only in the Lord my God",
+          "chords": [
+            {
+              "chord": "A",
+              "position": 0
+            },
+            {
+              "chord": "E/G#",
+              "position": 12
+            },
+            {
+              "chord": "A",
+              "position": 18
+            },
+            {
+              "chord": "B",
+              "position": 20
+            },
+            {
+              "chord": "C#m7",
+              "position": 42
+            }
+          ]
+        },
+        {
+          "lyrics": "For I know His glory is my good",
+          "chords": [
+            {
+              "chord": "A",
+              "position": 0
+            },
+            {
+              "chord": "B",
+              "position": 10
+            },
+            {
+              "chord": "C#m7",
+              "position": 30
+            }
+          ]
+        },
+        {
+          "lyrics": "For I know His glory is my good",
+          "chords": [
+            {
+              "chord": "A",
+              "position": 0
+            },
+            {
+              "chord": "B",
+              "position": 30
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "outro",
+      "name": "Outro",
+      "content": [
+        {
+          "lyrics": "    ",
+          "chords": [
+            {
+              "chord": "Asus2",
+              "position": 0
+            },
+            {
+              "chord": "E",
+              "position": 6
+            },
+            {
+              "chord": "B",
+              "position": 8
+            },
+            {
+              "chord": "C#m7",
+              "position": 10
+            }
+          ]
+        },
+        {
+          "lyrics": "    ",
+          "chords": [
+            {
+              "chord": "Asus2",
+              "position": 0
+            },
+            {
+              "chord": "E",
+              "position": 6
+            },
+            {
+              "chord": "B",
+              "position": 8
+            },
+            {
+              "chord": "C#m7",
+              "position": 10
+            }
+          ]
+        },
+        {
+          "lyrics": "    ",
+          "chords": [
+            {
+              "chord": "Asus2",
+              "position": 0
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "createdAt": "2024-12-19T00:00:00Z",
+    "updatedAt": "2024-12-19T00:00:00Z",
+    "tags": [
+      "worship",
+      "contemporary",
+      "christian"
+    ]
+  }
+}

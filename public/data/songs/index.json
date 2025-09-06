@@ -1,0 +1,34 @@
+[
+  {
+    "id": "wonderwall",
+    "title": "Wonderwall",
+    "artist": "Oasis",
+    "originalKey": "Em",
+    "tempo": 87,
+    "capoPosition": 2
+  },
+  {
+    "id": "blackbird",
+    "title": "Blackbird",
+    "artist": "The Beatles",
+    "originalKey": "G",
+    "tempo": 96,
+    "capoPosition": 0
+  },
+  {
+    "id": "hotel-california",
+    "title": "Hotel California",
+    "artist": "Eagles",
+    "originalKey": "Bm",
+    "tempo": 74,
+    "capoPosition": 0
+  },
+  {
+    "id": "his-glory-and-my-good",
+    "title": "His Glory and My Good",
+    "artist": "Cityalight",
+    "originalKey": "E",
+    "tempo": 68,
+    "capoPosition": 0
+  }
+]

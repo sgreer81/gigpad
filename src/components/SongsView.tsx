@@ -4,16 +4,26 @@ import type { Song } from '../types';
 import { dataLoader } from '../utils/dataLoader';
 import { FullSongDisplay } from './ChordLyricDisplay';
 
+interface SongIndex {
+  id: string;
+  title: string;
+  artist: string;
+  originalKey: string;
+  tempo: number;
+  capoPosition: number;
+}
+
 interface SongsViewProps {
   className?: string;
 }
 
 export const SongsView: React.FC<SongsViewProps> = ({ className = '' }) => {
-  const [songs, setSongs] = useState<Song[]>([]);
-  const [filteredSongs, setFilteredSongs] = useState<Song[]>([]);
+  const [songsIndex, setSongsIndex] = useState<SongIndex[]>([]);
+  const [filteredSongs, setFilteredSongs] = useState<SongIndex[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSong, setSelectedSong] = useState<Song | null>(null);
   const [loading, setLoading] = useState(true);
+  const [loadingSong, setLoadingSong] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -23,30 +33,40 @@ export const SongsView: React.FC<SongsViewProps> = ({ className = '' }) => {
   useEffect(() => {
     // Filter songs based on search term
     if (searchTerm.trim() === '') {
-      setFilteredSongs(songs);
+      setFilteredSongs(songsIndex);
     } else {
-      const filtered = songs.filter(song =>
+      const filtered = songsIndex.filter(song =>
         song.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        song.artist.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        song.metadata.tags?.some(tag => 
-          tag.toLowerCase().includes(searchTerm.toLowerCase())
-        )
+        song.artist.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredSongs(filtered);
     }
-  }, [songs, searchTerm]);
+  }, [songsIndex, searchTerm]);
 
   const loadSongs = async () => {
     try {
       setLoading(true);
-      const loadedSongs = await dataLoader.loadSongs();
-      setSongs(loadedSongs);
-      setFilteredSongs(loadedSongs);
+      const loadedIndex = await dataLoader.getSongsIndex();
+      setSongsIndex(loadedIndex);
+      setFilteredSongs(loadedIndex);
     } catch (err) {
       setError('Failed to load songs');
       console.error('Error loading songs:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleViewSong = async (songId: string) => {
+    try {
+      setLoadingSong(true);
+      const song = await dataLoader.getSongById(songId);
+      setSelectedSong(song);
+    } catch (err) {
+      setError('Failed to load song details');
+      console.error('Error loading song:', err);
+    } finally {
+      setLoadingSong(false);
     }
   };
 
@@ -133,7 +153,8 @@ export const SongsView: React.FC<SongsViewProps> = ({ className = '' }) => {
               <SongCard
                 key={song.id}
                 song={song}
-                onSelect={() => setSelectedSong(song)}
+                onSelect={() => handleViewSong(song.id)}
+                loading={loadingSong}
               />
             ))}
           </div>
@@ -144,11 +165,12 @@ export const SongsView: React.FC<SongsViewProps> = ({ className = '' }) => {
 };
 
 interface SongCardProps {
-  song: Song;
+  song: SongIndex;
   onSelect: () => void;
+  loading?: boolean;
 }
 
-const SongCard: React.FC<SongCardProps> = ({ song, onSelect }) => {
+const SongCard: React.FC<SongCardProps> = ({ song, onSelect, loading = false }) => {
   return (
     <div className="song-card bg-card border border-border rounded-lg p-4 hover:bg-accent/50 transition-colors">
       <div className="flex items-start justify-between">
@@ -166,23 +188,12 @@ const SongCard: React.FC<SongCardProps> = ({ song, onSelect }) => {
             {song.tempo && <span>♩ = {song.tempo}</span>}
           </div>
 
-          {song.metadata.tags && song.metadata.tags.length > 0 && (
-            <div className="flex flex-wrap gap-1 mt-2">
-              {song.metadata.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="text-xs bg-secondary text-secondary-foreground px-2 py-1 rounded"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
         </div>
 
         <button
           onClick={onSelect}
-          className="touch-target ml-4 p-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg"
+          disabled={loading}
+          className="touch-target ml-4 p-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg disabled:opacity-50"
         >
           <Eye size={20} />
         </button>

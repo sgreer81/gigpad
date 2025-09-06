@@ -1,9 +1,19 @@
 import type { Song, Setlist, LoopTrack } from '../types';
 
 // Data loading utilities for static JSON files
+interface SongIndex {
+  id: string;
+  title: string;
+  artist: string;
+  originalKey: string;
+  tempo: number;
+  capoPosition: number;
+}
+
 class DataLoader {
   private static instance: DataLoader;
-  private songsCache: Song[] | null = null;
+  private songsIndexCache: SongIndex[] | null = null;
+  private individualSongsCache: Map<string, Song> = new Map();
   private setlistsCache: Setlist[] | null = null;
   private loopsCache: LoopTrack[] | null = null;
 
@@ -16,33 +26,36 @@ class DataLoader {
     return DataLoader.instance;
   }
 
-  async loadSongs(): Promise<Song[]> {
-    if (this.songsCache) {
-      return this.songsCache;
+  async loadSongsIndex(): Promise<SongIndex[]> {
+    if (this.songsIndexCache) {
+      return this.songsIndexCache;
     }
 
     try {
-      const response = await fetch('/data/songs/songs.json');
+      const response = await fetch('/data/songs/index.json');
       if (!response.ok) {
-        throw new Error(`Failed to load songs: ${response.statusText}`);
+        throw new Error(`Failed to load songs index: ${response.statusText}`);
       }
-      const songsData = await response.json();
-      
-      // Convert date strings to Date objects
-      this.songsCache = songsData.map((song: any) => ({
-        ...song,
-        metadata: {
-          ...song.metadata,
-          createdAt: new Date(song.metadata.createdAt),
-          updatedAt: new Date(song.metadata.updatedAt),
-        }
-      }));
-      
-      return this.songsCache ?? [];
+      this.songsIndexCache = await response.json();
+      return this.songsIndexCache ?? [];
     } catch (error) {
-      console.error('Error loading songs:', error);
+      console.error('Error loading songs index:', error);
       return [];
     }
+  }
+
+  async loadSongs(): Promise<Song[]> {
+    const index = await this.loadSongsIndex();
+    const songs: Song[] = [];
+    
+    for (const songInfo of index) {
+      const song = await this.getSongById(songInfo.id);
+      if (song) {
+        songs.push(song);
+      }
+    }
+    
+    return songs;
   }
 
   async loadSetlists(): Promise<Setlist[]> {
@@ -90,8 +103,35 @@ class DataLoader {
   }
 
   async getSongById(id: string): Promise<Song | null> {
-    const songs = await this.loadSongs();
-    return songs.find(song => song.id === id) || null;
+    // Check cache first
+    if (this.individualSongsCache.has(id)) {
+      return this.individualSongsCache.get(id) || null;
+    }
+
+    try {
+      const response = await fetch(`/data/songs/${id}.json`);
+      if (!response.ok) {
+        throw new Error(`Failed to load song ${id}: ${response.statusText}`);
+      }
+      const songData = await response.json();
+      
+      // Convert date strings to Date objects if metadata exists
+      const song: Song = {
+        ...songData,
+        metadata: songData.metadata ? {
+          ...songData.metadata,
+          createdAt: new Date(songData.metadata.createdAt),
+          updatedAt: new Date(songData.metadata.updatedAt),
+        } : undefined
+      };
+      
+      // Cache the loaded song
+      this.individualSongsCache.set(id, song);
+      return song;
+    } catch (error) {
+      console.error(`Error loading song ${id}:`, error);
+      return null;
+    }
   }
 
   async getSetlistById(id: string): Promise<Setlist | null> {
@@ -121,9 +161,21 @@ class DataLoader {
 
   // Clear cache (useful for development)
   clearCache(): void {
-    this.songsCache = null;
+    this.songsIndexCache = null;
+    this.individualSongsCache.clear();
     this.setlistsCache = null;
     this.loopsCache = null;
+  }
+
+  // Get songs index for efficient listing (without loading full song content)
+  async getSongsIndex(): Promise<SongIndex[]> {
+    return this.loadSongsIndex();
+  }
+
+  // Preload specific songs (useful for setlists)
+  async preloadSongs(songIds: string[]): Promise<void> {
+    const loadPromises = songIds.map(id => this.getSongById(id));
+    await Promise.all(loadPromises);
   }
 }
 

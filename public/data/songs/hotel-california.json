@@ -1,0 +1,192 @@
+{
+  "id": "hotel-california",
+  "title": "Hotel California",
+  "artist": "Eagles",
+  "originalKey": "Bm",
+  "capoPosition": 0,
+  "tempo": 74,
+  "sections": [
+    {
+      "type": "verse",
+      "name": "Verse 1",
+      "content": [
+        {
+          "lyrics": "On a dark desert highway, cool wind in my hair",
+          "chords": [
+            {
+              "chord": "Bm",
+              "position": 0
+            },
+            {
+              "chord": "F#",
+              "position": 25
+            },
+            {
+              "chord": "A",
+              "position": 40
+            },
+            {
+              "chord": "E",
+              "position": 48
+            }
+          ]
+        },
+        {
+          "lyrics": "Warm smell of colitas, rising up through the air",
+          "chords": [
+            {
+              "chord": "G",
+              "position": 0
+            },
+            {
+              "chord": "D",
+              "position": 20
+            },
+            {
+              "chord": "Em",
+              "position": 35
+            },
+            {
+              "chord": "F#",
+              "position": 48
+            }
+          ]
+        },
+        {
+          "lyrics": "Up ahead in the distance, I saw a shimmering light",
+          "chords": [
+            {
+              "chord": "Bm",
+              "position": 0
+            },
+            {
+              "chord": "F#",
+              "position": 25
+            },
+            {
+              "chord": "A",
+              "position": 40
+            },
+            {
+              "chord": "E",
+              "position": 50
+            }
+          ]
+        },
+        {
+          "lyrics": "My head grew heavy and my sight grew dim, I had to stop for the night",
+          "chords": [
+            {
+              "chord": "G",
+              "position": 0
+            },
+            {
+              "chord": "D",
+              "position": 25
+            },
+            {
+              "chord": "Em",
+              "position": 45
+            },
+            {
+              "chord": "F#",
+              "position": 70
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "chorus",
+      "name": "Chorus",
+      "content": [
+        {
+          "lyrics": "Welcome to the Hotel California",
+          "chords": [
+            {
+              "chord": "G",
+              "position": 0
+            },
+            {
+              "chord": "A",
+              "position": 15
+            },
+            {
+              "chord": "D",
+              "position": 32
+            }
+          ]
+        },
+        {
+          "lyrics": "Such a lovely place (such a lovely place)",
+          "chords": [
+            {
+              "chord": "F#",
+              "position": 0
+            },
+            {
+              "chord": "Bm",
+              "position": 18
+            }
+          ]
+        },
+        {
+          "lyrics": "Such a lovely face",
+          "chords": [
+            {
+              "chord": "G",
+              "position": 0
+            },
+            {
+              "chord": "A",
+              "position": 18
+            }
+          ]
+        },
+        {
+          "lyrics": "Plenty of room at the Hotel California",
+          "chords": [
+            {
+              "chord": "D",
+              "position": 0
+            },
+            {
+              "chord": "F#",
+              "position": 20
+            },
+            {
+              "chord": "Bm",
+              "position": 35
+            }
+          ]
+        },
+        {
+          "lyrics": "Any time of year (any time of year) you can find it here",
+          "chords": [
+            {
+              "chord": "Em",
+              "position": 0
+            },
+            {
+              "chord": "F#",
+              "position": 35
+            },
+            {
+              "chord": "Bm",
+              "position": 55
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "createdAt": "2024-01-01T00:00:00Z",
+    "updatedAt": "2024-01-01T00:00:00Z",
+    "tags": [
+      "classic rock",
+      "70s",
+      "epic"
+    ]
+  }
+}
