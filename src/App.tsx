@@ -121,7 +121,7 @@ function App() {
   return (
     <SettingsProvider>
       <SetlistProvider>
-        <div className="app ios-safe-height flex flex-col bg-background text-foreground">
+        <div className="app ios-safe-height flex flex-col bg-background text-foreground min-h-screen">
         {/* Main content area */}
         <main className={`flex-1 overflow-hidden ${
           !(currentView === 'performance' && currentSetlist && currentSongs.length > 0) && 

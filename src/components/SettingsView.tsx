@@ -1,5 +1,5 @@
 import React from 'react';
-import { Moon, Sun, Palette, Info, Github, Music } from 'lucide-react';
+import { Moon, Sun, Palette, Info, Github, Music, RefreshCw, GitBranch, Clock } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useSettings } from '../contexts/SettingsContext';
 
@@ -10,6 +10,49 @@ interface SettingsViewProps {
 export const SettingsView: React.FC<SettingsViewProps> = ({ className = '' }) => {
   const { theme, toggleTheme } = useTheme();
   const { settings, updateSettings } = useSettings();
+
+  // Get git info from build-time injection
+  const getGitInfo = () => {
+    try {
+      return typeof __GIT_INFO__ !== 'undefined' ? __GIT_INFO__ : null;
+    } catch {
+      return null;
+    }
+  };
+
+  const gitInfo = getGitInfo();
+
+  const handleForceReload = () => {
+    // Clear all caches and reload
+    if ('serviceWorker' in navigator) {
+      // Clear service worker caches
+      caches.keys().then(cacheNames => {
+        Promise.all(cacheNames.map(cacheName => caches.delete(cacheName)))
+          .then(() => {
+            // Unregister service worker
+            navigator.serviceWorker.getRegistrations().then(registrations => {
+              Promise.all(registrations.map(registration => registration.unregister()))
+                .then(() => {
+                  // Force hard reload
+                  window.location.reload();
+                });
+            });
+          });
+      });
+    } else {
+      // Fallback: just reload with cache bypass
+      window.location.reload();
+    }
+  };
+
+  const formatBuildTime = (isoString: string) => {
+    try {
+      const date = new Date(isoString);
+      return date.toLocaleString();
+    } catch {
+      return isoString;
+    }
+  };
 
   return (
     <div className={`settings-view p-4 ${className}`}>
@@ -202,13 +245,39 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ className = '' }) =>
           <div className="bg-card border border-border rounded-lg p-4">
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Version</span>
-                <span className="text-foreground font-medium">1.0.0</span>
-              </div>
-              <div className="flex justify-between">
                 <span className="text-muted-foreground">App Name</span>
                 <span className="text-foreground font-medium">GigPad</span>
               </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Version</span>
+                <span className="text-foreground font-medium">1.0.0</span>
+              </div>
+              {gitInfo && (
+                <>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground flex items-center gap-1">
+                      <GitBranch size={12} />
+                      Commit
+                    </span>
+                    <span className="text-foreground font-mono text-xs">
+                      {gitInfo.shortHash}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Branch</span>
+                    <span className="text-foreground font-medium">{gitInfo.branch}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground flex items-center gap-1">
+                      <Clock size={12} />
+                      Built
+                    </span>
+                    <span className="text-foreground text-xs">
+                      {formatBuildTime(gitInfo.buildTime)}
+                    </span>
+                  </div>
+                </>
+              )}
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Optimized for</span>
                 <span className="text-foreground font-medium">iPad & Touch Devices</span>
@@ -225,16 +294,36 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ className = '' }) =>
 
         {/* Quick Actions */}
         <div className="settings-section">
+          <h2 className="text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
+            <RefreshCw size={20} />
+            App Management
+          </h2>
+          
           <div className="grid grid-cols-2 gap-4">
+            <button
+              onClick={handleForceReload}
+              className="p-4 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors text-center"
+            >
+              <div className="flex items-center justify-center gap-2 mb-1">
+                <RefreshCw size={16} />
+                <span className="text-sm font-medium">Force Reload</span>
+              </div>
+              <div className="text-xs opacity-90">Get latest version</div>
+            </button>
+            
             <button
               onClick={() => {
                 if ('serviceWorker' in navigator) {
                   caches.keys().then(cacheNames => {
                     Promise.all(cacheNames.map(cacheName => caches.delete(cacheName)))
                       .then(() => {
-                        alert('Cache cleared! Refresh the page to reload fresh content.');
+                        alert('Cache cleared! The app will reload with fresh content.');
+                        window.location.reload();
                       });
                   });
+                } else {
+                  alert('Cache cleared!');
+                  window.location.reload();
                 }
               }}
               className="p-4 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/80 transition-colors text-center"
@@ -262,6 +351,30 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ className = '' }) =>
               <div className="text-sm font-medium">Share App</div>
               <div className="text-xs text-muted-foreground mt-1">Tell other musicians</div>
             </button>
+
+            {gitInfo && (
+              <button
+                onClick={() => {
+                  const info = `GigPad Version Info:
+App Version: 1.0.0
+Git Commit: ${gitInfo.shortHash} (${gitInfo.commitHash})
+Branch: ${gitInfo.branch}
+Built: ${formatBuildTime(gitInfo.buildTime)}`;
+                  
+                  if (navigator.clipboard) {
+                    navigator.clipboard.writeText(info).then(() => {
+                      alert('Version info copied to clipboard!');
+                    });
+                  } else {
+                    alert(info);
+                  }
+                }}
+                className="p-4 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/80 transition-colors text-center"
+              >
+                <div className="text-sm font-medium">Copy Version Info</div>
+                <div className="text-xs text-muted-foreground mt-1">For bug reports</div>
+              </button>
+            )}
           </div>
         </div>
       </div>
