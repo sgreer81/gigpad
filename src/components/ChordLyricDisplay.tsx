@@ -141,7 +141,6 @@ interface SongSectionDisplayProps {
   };
   originalKey: string;
   currentKey: string;
-  capoPosition?: number;
   className?: string;
 }
 
@@ -149,7 +148,6 @@ export const SongSectionDisplay: React.FC<SongSectionDisplayProps> = ({
   section,
   originalKey,
   currentKey,
-  capoPosition = 0,
   className = ''
 }) => {
   const getSectionTypeColor = (type: string) => {
@@ -177,7 +175,6 @@ export const SongSectionDisplay: React.FC<SongSectionDisplayProps> = ({
             line={line}
             originalKey={originalKey}
             currentKey={currentKey}
-            capoPosition={capoPosition}
           />
         ))}
       </div>
@@ -234,7 +231,6 @@ export const FullSongDisplay: React.FC<FullSongDisplayProps> = ({
             section={section}
             originalKey={song.originalKey}
             currentKey={displayKey}
-            capoPosition={capoPosition}
           />
         ))}
       </div>
