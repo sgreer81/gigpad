@@ -322,7 +322,7 @@ export const PerformanceView: React.FC<PerformanceViewProps> = ({
     <div className={`performance-view flex flex-col ${className}`}>
       {/* Header with navigation and controls (sticky, compact) */}
         <div className="performance-header fixed top-0 left-0 right-0 z-40 w-full bg-card/95 backdrop-blur border-b border-border">
-          <div className="h-12 flex items-center gap-2 px-2">
+          <div className="h-16 flex items-center gap-2 p-2">
             <button
               onClick={onBack}
               aria-label="Back"
@@ -426,7 +426,7 @@ export const PerformanceView: React.FC<PerformanceViewProps> = ({
       </div>
 
       {/* Spacer to offset fixed header height */}
-      <div className="h-12" />
+      <div className="h-16" />
       {/* Song content (no inner scroll; main handles scrolling) */}
       <div className="song-content flex-1 p-4 pt-2 performance-content-with-audio">
         <FullSongDisplay
@@ -436,7 +436,7 @@ export const PerformanceView: React.FC<PerformanceViewProps> = ({
         />
       </div>
 
-      <div className="h-12" />
+      <div className="h-16" />
 
       {/* Audio controls */}
       <div className="sticky-audio-controls p-4">
